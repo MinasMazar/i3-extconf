@@ -15,7 +15,7 @@ set $fcolor #DD6633
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below. ISO 10646 = Unicode
- 
+                     
 # The font above is very space-efficient, that is, it looks good, sharp and
 # clear in small sizes. However, if you need a lot of unicode glyphs or
 # right-to-left text rendering, you should instead use pango for rendering and
@@ -24,6 +24,8 @@ font pango:DejaVu Sans Mono 8
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
+workspace_auto_back_and_forth yes
+focus_follows_mouse yes
 
 # start a terminal
 bindsym $mod+Return exec i3-sensible-terminal
@@ -39,6 +41,10 @@ bindsym $mod+Shift+q kill
 bindsym $mod+d exec --no-startup-id i3-dmenu-desktop --dmenu='dmenu -b'
 
 # Bind Multimedia keys
+bindsym XF86AudioPlay               exec xmms2 toggle
+bindsym XF86AudioStop               exec xmms2 stop
+bindsym XF86AudioPrev               exec xmms2 prev
+bindsym XF86AudioNext               exec xmms2 next
 bindsym XF86AudioLowerVolume        exec amixer -q set Master 2%- unmute
 bindsym XF86AudioRaiseVolume        exec amixer -q set Master 2%+ unmute
 bindsym Shift+XF86AudioLowerVolume  exec amixer -q set Master mute
@@ -135,6 +141,7 @@ bindsym $mod+Shift+8 move container to workspace number 8
 bindsym $mod+Shift+9 move container to workspace number 9
 bindsym $mod+Shift+0 move container to workspace number 10
 
+
 # reload the configuration file
 bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
@@ -167,32 +174,31 @@ mode "resize" {
         bindsym $mod+r mode "default"
 }
 
-mode "yam" {
+mode "ctl" {
 
-  bindsym $mod+o k k exec x-terminal-emulator
+  bindsym s exec x-terminal-emulator, mode "default"
+
   bindsym Return mode "default"
   bindsym Escape mode "default"
-  bindsym $mod+y mode "default"
+  bindsym $mod+o mode "default"
 }
 
 bindsym $mod+r mode "resize"
-
-bindsym $mod+y mode "yam"
-
-workspace_auto_back_and_forth yes
+bindsym $mod+o mode "ctl"
 
 # Appplication assignments
 assign [class="Chromium-browser"] 2:WWW
 assign [class="Opera"] 2:WWW
+assign [class="(i?)thunar"] 3:FILEthunart
 assign [class="wicd-client.py"] 4:SYS
 assign [title="win0"] 5:DEV
-assign [class="xmms"] 6:MEDIA
+assign [class="gxmms"] 6:MEDIA, floating disable
 assign [class="libreoffice"] 7:OFFICE
 
 for_window [class="thunar"] move to workspace 3:FILE
 for_window [class="gkrellm"] move to workspace 4:SYS , floating enable
 for_window [class="gxmms2"] move to workspace 6:MEDIA , floating disable
-#for_window [class="gxmms2" title="(?i)Playlist Editor"] move to workspace 6:MEDIA , floating disable
+for_window [class="gxmms2" title="(?i)Playlist Editor"] move to workspace 6:MEDIA , floating disable
 
 # Defining borders
 new_window pixel 4
@@ -214,9 +220,9 @@ bar {
           statusline #ffffff
           separator #F6336F
   
-          focused_workspace  #4c7899 #285577 #ffffff
-          active_workspace   #333333 #5f676a #ffffff
-          inactive_workspace #333333 #222222 #888888
+          focused_workspace  #4c7899 #285577 $fcolor
+          active_workspace   #333333 #5f676a #FFFF00
+          inactive_workspace #333333 #222222 #FFFF00
           urgent_workspace   #2f343a #900000 #ffffff
         }
 
