@@ -32,7 +32,14 @@ class I3Bar
   end
 
   def refresh_widgets
-    @widgets[:curr_play] = `xmms2 current --format '${artist} - ${title} (${playback_status})'`
+    xmms2_status = `xmms2 current --format '${artist} - ${title} (${playback_status})'`.chomp
+    if xmms2_status =~ /(Stopped)/
+      xmms2_status = "[No playing]"
+    else
+      xmms2_status = "[#{xmms2_status}]"
+    end
+
+    @widgets[:curr_play] = xmms2_status
     @widgets[:time] = Time.new.strftime('%d-%m-%Y %H:%M:%S')
   end
 
