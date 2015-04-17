@@ -174,22 +174,24 @@ mode "resize" {
         bindsym $mod+r mode "default"
 }
 
-mode "ctl" {
+mode "mirv" {
 
-  bindsym s exec x-terminal-emulator, mode "default"
+  bindsym Return exec x-terminal-emulator
+  bindsym o exec opera
+  bindsym g exec gxmms2
 
-  bindsym Return mode "default"
   bindsym Escape mode "default"
-  bindsym $mod+o mode "default"
+  bindsym $mod+m mode "default"
 }
 
+
 bindsym $mod+r mode "resize"
-bindsym $mod+o mode "ctl"
+bindsym $mod+m mode "mirv"
 
 # Appplication assignments
 assign [class="Chromium-browser"] 2:WWW
 assign [class="Opera"] 2:WWW
-assign [class="(i?)thunar"] 3:FILEthunart
+assign [class="(i?)thunar"] 3:FILE
 assign [class="wicd-client.py"] 4:SYS
 assign [title="win0"] 5:DEV
 assign [class="gxmms"] 6:MEDIA, floating disable
