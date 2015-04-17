@@ -245,4 +245,4 @@ client.unfocused          $bcolor $bcolor #888888 #292d2e
 # client.urgent           #2f343a #900000 #ffffff #900000
 # client.placeholder      #000000 #0c0c0c #ffffff #000000
 
-                                                       
+exec rvm jruby do ruby ~/.i3/littletry.rb

@@ -53,9 +53,15 @@ class TrayApp
   end
 end
 
-tray_app = TrayApp.new('Little JRuby Tray Application', './p1010296a.git')
+def spawn_app cmd
+  system cmd
+end
+
+tray_app = TrayApp.new('Little JRuby Tray Application', './rlauncher.png')
 tray_app.append_item('Exit', :exit) {}
-tray_app.append_item( 'Action1') { system 'x-terminal-emulator' }
+tray_app.append_item('Terminal') { spawn_app 'x-terminal-emulator' }
+tray_app.append_item('Lock screen') { spawn_app 'xflock4' }
+tray_app.append_item('File manager') { spawn_app 'thunar' }
 tray_app.append_item('About..') { }
 
 tray_app.tray_it!
