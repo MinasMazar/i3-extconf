@@ -57,7 +57,8 @@ def spawn_app cmd
   system cmd
 end
 
-tray_app = TrayApp.new('Little JRuby Tray Application', './rlauncher.png')
+icon_path = File.expand_path '../rlauncher.png', __FILE__
+tray_app = TrayApp.new('Little JRuby Tray Application', icon_path)
 tray_app.append_item('Exit', :exit) {}
 tray_app.append_item('Terminal') { spawn_app 'x-terminal-emulator' }
 tray_app.append_item('Lock screen') { spawn_app 'xflock4' }
@@ -65,3 +66,4 @@ tray_app.append_item('File manager') { spawn_app 'thunar' }
 tray_app.append_item('About..') { }
 
 tray_app.tray_it!
+
