@@ -51,6 +51,7 @@ bindsym Shift+XF86AudioLowerVolume  exec amixer -q set Master mute
 bindsym Shift+XF86AudioRaiseVolume  exec amixer -q set Master toggle
 
 # Bind lockers & shooters
+exec xscreensaver -no-splash
 bindsym $mod+Shift+ugrave    exec xscreensaver-command --activate
 bindsym Print                exec xfce4-screenshooter
 
