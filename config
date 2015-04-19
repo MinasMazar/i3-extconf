@@ -181,7 +181,9 @@ mode "mirv" {
 
   bindsym Return exec x-terminal-emulator
   bindsym o exec opera
+  bindsym c exec chromium-browser
   bindsym g exec gxmms2
+  bindsym k exec gkrellm
 
   bindsym Escape mode "default"
   bindsym $mod+m mode "default"
@@ -194,7 +196,7 @@ bindsym $mod+m mode "mirv"
 # Appplication assignments
 assign [class="Chromium-browser"] 2:WWW
 assign [class="Opera"] 2:WWW
-assign [class="(i?)thunar"] 3:FILE
+assign [class="thunar"] 3:FILE
 assign [class="wicd-client.py"] 4:SYS
 assign [title="win0"] 5:DEV
 assign [class="gxmms"] 6:MEDIA, floating disable
@@ -246,8 +248,10 @@ bar {
 
 client.focused            $fcolor $fcolor #ffffff #2e9ef4
 # client.focused_inactive #99BBBB #99BBBB #ffffff #484e50
-client.unfocused          $bcolor $bcolor #888888 #292d2e
+client.unfocused          $bcolor $bcolor #FFFF00 #292d2e
 # client.urgent           #2f343a #900000 #ffffff #900000
 # client.placeholder      #000000 #0c0c0c #ffffff #000000
 
 # exec rvm jruby do ruby ~/.i3/traythrow.rb
+exec pasystray
+exec xsetroot -bitmap /home/minasmazar/Immagini/392784-vintage-swirly-pattern.bmp
