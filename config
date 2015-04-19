@@ -177,6 +177,8 @@ mode "resize" {
 
 mode "mirv" {
 
+  bindsym i exec /home/minasmazar/.i3/i3-ctl.sh
+
   bindsym Return exec x-terminal-emulator
   bindsym o exec opera
   bindsym g exec gxmms2
