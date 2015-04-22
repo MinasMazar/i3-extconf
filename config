@@ -56,8 +56,8 @@ bindsym $mod+Shift+ugrave    exec xscreensaver-command --activate
 bindsym Print                exec xfce4-screenshooter
 
 # Bind util X11 bins
-bindsym Pause                exec /bin/bash -e xmessage `xprop`
-bindsym Shift+Pause          exec xev
+bindsym Pause                exec x-terninal-emulator -x "xprop; read"
+bindsym Shift+Pause          exec x-terminal-emulator -x xev
 
 # change focus
 bindsym $mod+j focus left
@@ -178,6 +178,7 @@ mode "resize" {
 mode "mirv" {
 
   bindsym i exec /home/minasmazar/.i3/i3-ctl.sh
+  # bindsym p exec /home/minasmazar/.i3/i3-ctl.sh phalanx
 
   bindsym Return exec x-terminal-emulator
   bindsym o exec opera
@@ -202,8 +203,10 @@ assign [title="win0"] 5:DEV
 assign [class="gxmms"] 6:MEDIA, floating disable
 assign [class="libreoffice"] 7:OFFICE
 
+for_window [class="xfce4-notifyd"] floating enable
 for_window [class="thunar"] move to workspace 3:FILE
 for_window [class="gkrellm"] move to workspace 4:SYS , floating enable
+for_window [class="Conky"] move to workspace 4:SYS
 for_window [class="gxmms2"] move to workspace 6:MEDIA , floating disable
 for_window [class="gxmms2" title="(?i)Playlist Editor"] move to workspace 6:MEDIA , floating disable
 
@@ -254,4 +257,6 @@ client.unfocused          $bcolor $bcolor #FFFF00 #292d2e
 
 # exec rvm jruby do ruby ~/.i3/traythrow.rb
 exec pasystray
+exec conky -u 4
+exec x-terminal-emulator -x vim ~/.i3/config
 exec xsetroot -bitmap /home/minasmazar/Immagini/392784-vintage-swirly-pattern.bmp
