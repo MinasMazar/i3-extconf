@@ -49,15 +49,6 @@ module I3
       ]
     end
   
-    def start_phalanx
-      i3send [
-        "workspace 9:PHALANX", "split h",
-        "exec 'x-terminal-emulator -x rvm default do phalanx-prybot.rb S126_IT' ",
-        "exec 'x-terminal-emulator -x rvm default do phalanx-prybot.rb S114_IT' ",
-        "workspace back_and_forh"
-      ]
-    end
-  
   end
 
 end
@@ -71,7 +62,19 @@ class I3CLI < Thor
   def massterm
     gotow_and_start_nterms(options[:workspace], options[:terms])
   end
-    
+
+  desc "phalanx", "Start phalanx-prybot sessions."
+    def phalanx
+      i3send [
+        "workspace 9:PHALANX", "split h",
+        "exec 'x-terminal-emulator -x rvm default do phalanx-prybot.rb S126_IT' ",
+        "exec 'x-terminal-emulator -x rvm default do phalanx-prybot.rb S114_IT' ",
+        "workspace back_and_forth"
+      ]
+    end 
 end
 
-I3CLI.start ARGV
+args = ARGV
+args = `echo massterm | dmenu`.chomp.split if args.empty?
+I3CLI.start args
+
