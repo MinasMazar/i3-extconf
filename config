@@ -178,7 +178,7 @@ mode "resize" {
 mode "mirv" {
 
   bindsym i exec /home/minasmazar/.i3/i3-ctl.sh
-  # bindsym p exec /home/minasmazar/.i3/i3-ctl.sh phalanx
+  bindsym p exec /home/minasmazar/.i3/i3-ctl.sh phalanx
 
   bindsym Return exec x-terminal-emulator
   bindsym o exec opera
