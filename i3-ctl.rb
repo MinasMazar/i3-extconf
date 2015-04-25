@@ -8,7 +8,7 @@ module I3
   
     [ :get_workspaces, :get_outputs, :get_tree, :get_marks, :get_bar_config, :get_version ].each do |meth|
       define_method meth do
-        i3send '-t', meth
+        i3send "-t #{meth}"
       end
     end
   
@@ -64,14 +64,20 @@ class I3CLI < Thor
   end
 
   desc "phalanx", "Start phalanx-prybot sessions."
-    def phalanx
-      i3send [
-        "workspace 9:PHALANX", "split h",
-        "exec 'x-terminal-emulator -x rvm default do phalanx-prybot.rb S126_IT' ",
-        "exec 'x-terminal-emulator -x rvm default do phalanx-prybot.rb S114_IT' ",
-        "workspace back_and_forth"
-      ]
-    end 
+  def phalanx
+    i3send [
+      "workspace 9:PHALANX", "split h",
+      "exec 'x-terminal-emulator -x rvm default do phalanx-prybot.rb S126_IT' ",
+      "exec 'x-terminal-emulator -x rvm default do phalanx-prybot.rb S114_IT' ",
+      "workspace back_and_forth"
+     ]
+  end
+
+  desc "bells", "Bells of Pescolanciano give us the current time."
+  def bells
+    system "rvm default exec pescobells campanaro"
+  end
+
 end
 
 args = ARGV

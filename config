@@ -56,7 +56,6 @@ bindsym $mod+Shift+ugrave    exec xscreensaver-command --activate
 bindsym Print                exec xfce4-screenshooter
 
 # Bind util X11 bins
-bindsym Pause                exec x-terninal-emulator -x "xprop; read"
 bindsym Shift+Pause          exec x-terminal-emulator -x xev
 
 # change focus
@@ -175,24 +174,33 @@ mode "resize" {
         bindsym $mod+r mode "default"
 }
 
-mode "mirv" {
+mode "I3::API" {
 
   bindsym i exec /home/minasmazar/.i3/i3-ctl.sh
   bindsym p exec /home/minasmazar/.i3/i3-ctl.sh phalanx
 
+  bindsym $mod+Menu mode "default"
+  bindsym Escape mode "default"
+  bindsym Return mode "deault"
+}
+
+mode "mirv" {
   bindsym Return exec x-terminal-emulator
   bindsym o exec opera
   bindsym c exec chromium-browser
   bindsym g exec gxmms2
   bindsym k exec gkrellm
 
+  bindsym b exec x-terminal-emulator -x rvm default exec pescobells demone --cli-audio-player=play
+
   bindsym Escape mode "default"
   bindsym $mod+m mode "default"
 }
 
 
-bindsym $mod+r mode "resize"
-bindsym $mod+m mode "mirv"
+bindsym $mod+r    mode "resize"
+bindsym $mod+Menu mode "I3::API"
+bindsym $mod+m    mode "mirv"
 
 # Appplication assignments
 assign [class="Chromium-browser"] 2:WWW
@@ -256,7 +264,8 @@ client.unfocused          $bcolor $bcolor #FFFF00 #292d2e
 # client.placeholder      #000000 #0c0c0c #ffffff #000000
 
 # exec rvm jruby do ruby ~/.i3/traythrow.rb
-exec pasystray
+#exec pasystray
+exec volumeicon
 exec conky -u 4
 exec x-terminal-emulator -x vim ~/.i3/config
 exec xsetroot -bitmap /home/minasmazar/Immagini/392784-vintage-swirly-pattern.bmp
