@@ -186,11 +186,13 @@ mode "I3::API" {
 
 mode "mirv" {
   bindsym Return exec x-terminal-emulator
+  bindsym f exec thunar
   bindsym o exec opera
   bindsym c exec chromium-browser
   bindsym g exec gxmms2
   bindsym k exec gkrellm
 
+  bindsym p exec /home/minasmazar/.i3/i3-ctl.sh phalanx
   bindsym b exec x-terminal-emulator -x rvm default exec pescobells demone --cli-audio-player=play
 
   bindsym Escape mode "default"
