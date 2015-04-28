@@ -219,6 +219,8 @@ new_window pixel 4
 bar {
         position top
 
+	tray_output primary
+
         workspace_buttons yes
         # strip_workspace_numbers yes
         # status_command i3status
@@ -258,6 +260,7 @@ client.unfocused          $bcolor $bcolor #FFFF00 #292d2e
 
 # exec rvm jruby do ruby ~/.i3/traythrow.rb
 #exec pasystray
+exec xrandr --output VGA1 --right-of LVDS1
 exec feh --bg-scale ~/Immagini/392784-vintage-swirly-pattern.jpg
 exec volumeicon
 exec conky -u 4
