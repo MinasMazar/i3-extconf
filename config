@@ -55,6 +55,9 @@ exec xscreensaver -no-splash
 bindsym $mod+Shift+ugrave    exec xscreensaver-command --activate
 bindsym Print                exec xfce4-screenshooter
 
+# Bind i3-ctl::outpad feature
+bindsym $mod+Shift+o  exec /home/minasmazar/.i3/i3-ctl.sh outpad
+
 # Bind util X11 bins
 bindsym Shift+Pause          exec x-terminal-emulator -x xev
 
@@ -192,7 +195,7 @@ mode "MIRV" {
 
 bindsym $mod+r    mode "resize"
 bindsym $mod+i    exec /home/minasmazar/.i3/i3-ctl.sh
-bindsym $mod+Shift+o  exec /home/minasmazar/.i3/i3-ctl.sh outpad
+
 bindsym $mod+m    mode "mirv"
 
 # Appplication assignments
@@ -219,7 +222,8 @@ new_window pixel 4
 bar {
         position top
 
-	tray_output primary
+        output LVDS1
+        output VGA1
 
         workspace_buttons yes
         # strip_workspace_numbers yes
