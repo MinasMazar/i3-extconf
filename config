@@ -59,13 +59,13 @@ bindsym Print                exec xfce4-screenshooter
 bindsym Shift+Pause          exec x-terminal-emulator -x xev
 
 # change focus
-bindsym $mod+j focus left
+bindsym $mod+l focus left
 bindsym $mod+k focus down
-bindsym $mod+l focus up
-bindsym $mod+ograve focus right
+bindsym $mod+o focus up
+bindsym $mod+p focus right
 
 # alternatively, you can use the cursor keys:
-bindsym $mod+Left focus left
+bindsym o$mod+Left focus left
 bindsym $mod+Down focus down
 bindsym $mod+Up focus up
 bindsym $mod+Right focus right
@@ -106,7 +106,7 @@ bindsym $mod+space focus mode_toggle
 bindsym $mod+a focus parent
 
 # focus the child container
-#bindsym $mod+d focus child
+bindsym $mod+q focus child
 
 # Scratchpadding
 bindsym $mod+Shift+minus move scratchpad
@@ -174,17 +174,7 @@ mode "resize" {
         bindsym $mod+r mode "default"
 }
 
-mode "I3::API" {
-
-  bindsym i exec /home/minasmazar/.i3/i3-ctl.sh
-  bindsym p exec /home/minasmazar/.i3/i3-ctl.sh phalanx
-
-  bindsym $mod+Menu mode "default"
-  bindsym Escape mode "default"
-  bindsym Return mode "deault"
-}
-
-mode "mirv" {
+mode "MIRV" {
   bindsym Return exec x-terminal-emulator
   bindsym f exec thunar
   bindsym o exec opera
@@ -201,7 +191,8 @@ mode "mirv" {
 
 
 bindsym $mod+r    mode "resize"
-bindsym $mod+Menu mode "I3::API"
+bindsym $mod+i    exec /home/minasmazar/.i3/i3-ctl.sh
+bindsym $mod+Shift+o  exec /home/minasmazar/.i3/i3-ctl.sh outpad
 bindsym $mod+m    mode "mirv"
 
 # Appplication assignments
@@ -267,6 +258,7 @@ client.unfocused          $bcolor $bcolor #FFFF00 #292d2e
 
 # exec rvm jruby do ruby ~/.i3/traythrow.rb
 #exec pasystray
+exec feh --bg-scale ~/Immagini/392784-vintage-swirly-pattern.jpg
 exec volumeicon
 exec conky -u 4
 exec x-terminal-emulator -x vim ~/.i3/config
