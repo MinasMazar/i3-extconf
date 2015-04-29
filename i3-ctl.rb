@@ -25,6 +25,18 @@ module I3
       get_outputs.select {|o| o["active"] == true }
     end
 
+    def goto_workspace(ws)
+      i3cmd "workspace #{ws}"
+    end
+
+    def goto_output(out)
+      i3cmd "focus output #{out}"
+    end
+
+    def exec(cmd)
+      i3cmd "exec \"#{cmd}\""
+    end
+
     def i3cmd(cmd)
       i3send cmd
     end
@@ -43,14 +55,6 @@ module I3
   module Macros
 
     include API
-
-    def goto_workspace(ws)
-      i3cmd "workspace #{ws}"
-    end
-
-    def goto_output(out)
-      i3cmd "focus output #{out}"
-    end
 
     def goto_and_hold_workspace(ws = nil)
       goto_workspace ws if ws
@@ -101,7 +105,7 @@ class I3CLI < Thor
 
   desc "phalanx", "Start phalanx-prybot sessions."
   def phalanx
-    i3send [
+    i3cmd [
       "workspace 9:PHALANX", "split h",
       "exec 'x-terminal-emulator -x rvm default do phalanx-prybot.rb S126_IT' ",
       "exec 'x-terminal-emulator -x rvm default do phalanx-prybot.rb S114_IT' ",
@@ -120,6 +124,15 @@ class I3CLI < Thor
   desc "outpad", "Escape current workspaces for all outputs"
   def outpad
     goto_outpads
+  end
+
+  desc "media", "Launch media compliant"
+  def media
+    goto_workspace "3:MEDIA"
+    i3cmd [ "split v" ]
+    exec "gxmms2"
+    exec "x-terminal-emulator -x alsamixer"
+    goto_workspace :back_and_forth
   end
 
   desc "pry", "Start PRY session inside CLI"
