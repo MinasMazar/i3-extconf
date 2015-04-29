@@ -68,7 +68,7 @@ bindsym $mod+o focus up
 bindsym $mod+p focus right
 
 # alternatively, you can use the cursor keys:
-bindsym o$mod+Left focus left
+bindsym $mod+Left focus left
 bindsym $mod+Down focus down
 bindsym $mod+Up focus up
 bindsym $mod+Right focus right
@@ -182,9 +182,9 @@ mode "MIRV" {
   bindsym f exec thunar
   bindsym o exec opera
   bindsym c exec chromium-browser
-  bindsym g exec gxmms2
+  bindsym m workspace 3:MEDIA, split v, exec gxmms2, exec x-terminal-emulator -x alsamixer, workspace back_and_forth
   bindsym k exec gkrellm
-
+  bindsym j exec jedit
   bindsym p exec /home/minasmazar/.i3/i3-ctl.sh phalanx
   bindsym b exec x-terminal-emulator -x rvm default exec pescobells demone --cli-audio-player=play
 
@@ -192,8 +192,17 @@ mode "MIRV" {
   bindsym $mod+m mode "default"
 }
 
+mode "I3:MACROS" {
+
+  bindsym c  exec x-terminal-emulator -x rvm default exec cappuccino
+
+  bindsym Escape mode "default"
+  bindsym Return mode "default"
+  bindsym $mod+u mode "default"
+}
 
 bindsym $mod+r    mode "resize"
+bindsym $mod+u    mode "I3:MACROS"
 bindsym $mod+i    exec /home/minasmazar/.i3/i3-ctl.sh
 
 bindsym $mod+m    mode "mirv"
@@ -263,10 +272,9 @@ client.unfocused          $bcolor $bcolor #FFFF00 #292d2e
 # client.placeholder      #000000 #0c0c0c #ffffff #000000
 
 # exec rvm jruby do ruby ~/.i3/traythrow.rb
-#exec pasystray
+exec pasystray
+# exec volumeicon
 exec xrandr --output VGA1 --right-of LVDS1
 exec feh --bg-scale ~/Immagini/392784-vintage-swirly-pattern.jpg
-exec volumeicon
 exec conky -u 4
 exec x-terminal-emulator -x vim ~/.i3/config
-exec xsetroot -bitmap /home/minasmazar/Immagini/392784-vintage-swirly-pattern.bmp
