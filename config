@@ -277,4 +277,4 @@ exec pasystray
 exec xrandr --output VGA1 --right-of LVDS1
 exec feh --bg-scale ~/Immagini/392784-vintage-swirly-pattern.jpg
 exec conky -u 4
-exec x-terminal-emulator -x vim ~/.i3/config
+# exec x-terminal-emulator -x vim ~/.i3/config
