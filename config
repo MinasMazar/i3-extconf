@@ -62,10 +62,15 @@ bindsym $mod+Shift+o  exec /home/minasmazar/.i3/i3-ctl.sh outpad
 bindsym Shift+Pause          exec x-terminal-emulator -x xev
 
 # change focus
-bindsym $mod+l focus left
+#bindsym $mod+l focus left
+#bindsym $mod+k focus down
+#bindsym $mod+o focus up
+#bindsym $mod+p focus right
+
+bindsym $mod+j focus left
 bindsym $mod+k focus down
-bindsym $mod+o focus up
-bindsym $mod+p focus right
+bindsym $mod+l focus up
+bindsym $mod+ograve focus right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
