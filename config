@@ -13,12 +13,12 @@ set $mod Mod4
 set $bcolor #044440
 set $fcolor #DD6633
 
-set $ws_1  1:MAIN
-set $ws_2  2:WWW
-set $ws_3  3:MEDIA
-set $ws_4  4:SYS
-set $ws_5  5:DEV
-set $ws_6  6:FILE
+set $ws_1  1
+set $ws_2  2
+set $ws_3  3
+set $ws_4  4
+set $ws_5  5
+set $ws_6  6
 set $ws_7  7
 set $ws_8  8
 set $ws_9  9:PHALANX
@@ -252,11 +252,11 @@ bar {
 
         workspace_buttons yes
         # strip_workspace_numbers yes
-        # status_command i3status
-        status_command ruby /home/minasmazar/.i3/i3ba.rb
+        status_command i3status
+        #status_command ruby /home/minasmazar/.i3/i3ba.rb
 
         # font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
-        font pango:DejaVu Sans Mono 10
+        font pango:DejaVu Sans Mono 8
         colors {
           background $bcolor
           statusline #ffffff
