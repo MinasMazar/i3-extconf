@@ -25,7 +25,8 @@ module I3
       get_outputs.select {|o| o["active"] == true }
     end
 
-    def goto_workspace(ws)
+    def goto_workspace(ws = :back_and_forth)
+      ws = 'back_and_forth' if ws == :back_and_forth
       i3cmd "workspace #{ws}"
     end
 
@@ -105,12 +106,10 @@ class I3CLI < Thor
 
   desc "phalanx", "Start phalanx-prybot sessions."
   def phalanx
-    i3cmd [
-      "workspace 9:PHALANX", "split h",
-      "exec 'x-terminal-emulator -x rvm default do phalanx-prybot.rb S126_IT' ",
-      "exec 'x-terminal-emulator -x rvm default do phalanx-prybot.rb S114_IT' ",
-      "workspace back_and_forth"
-     ]
+    i3cmd [ "workspace 9:PHALANX", "split h" ]
+    exec "urxvt -e rvm default do phalanx-prybot.rb S126_IT"
+    exec "urxvt -e rvm default do phalanx-prybot.rb S126_IT"
+    i3cmd "workspace back_and_forth"
   end
 
   desc "bells", "Bells of Pescolanciano give us the current time."
