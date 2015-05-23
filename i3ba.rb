@@ -1,14 +1,44 @@
 #!/bin/env ruby
 
 class I3Bar
+
+  class Widget
+    def initialize(timeout, &proc)
+      @text = "..."
+      @active = true
+      self.timeout = timeout
+      self.set_proc(&proc)
+    end
+    def set_proc(&proc)
+      @proc = proc
+    end
+    attr_accessor :timeout, :active
+    def stop
+      @run_th && @run_th.kill
+    end
+    def run
+      @run_th = Thread.new do
+        loop do
+          #@text = binding.call @proc
+          @text = @proc.call
+          break if @timeout.to_i <= 0
+          sleep @timeout.to_i
+        end
+      end
+    end
+    def eval
+      @active ? @text : ''
+    end
+  end
+
   def initialize
     @widgets = {}
     init_widgets
+    run_widgets
   end
 
   def to_s
-    refresh_widgets
-    @widgets.values.map(&:chomp).join(" | ").to_s
+    @widgets.values.map(&:eval).map(&:chomp).join(" | ").to_s
   end
 
   def to_stdout
@@ -26,23 +56,21 @@ class I3Bar
   private
 
   def init_widgets
-    @widgets[:curr_play] = nil
-    @widgets[:hostname] = [`whoami`, '@',  `hostname`].map(&:chomp).join
-    @widgets[:time] = nil
+    @widgets[:hostname] = Widget.new 0 do
+      [`whoami`, '@',  `hostname`].map(&:chomp).join
+    end
+    @widgets[:random] = Widget.new 4 do
+      ( ('a'..'z').to_a + ('A'..'Z').to_a + ('0'..'9').to_a ).shuffle.join
+    end
+    @widgets[:time] = Widget.new 1 do
+      Time.new.strftime('%d-%m-%Y %H:%M:%S')
+    end
   end
 
-  def refresh_widgets
-    xmms2_status = `xmms2 current --format '${artist} - ${title} (${playback_status})'`.chomp
-    if xmms2_status =~ /(Stopped)/
-      xmms2_status = "[No playing]"
-    else
-      xmms2_status = "[#{xmms2_status}]"
-    end
-
-    @widgets[:curr_play] = xmms2_status
-    @widgets[:time] = Time.new.strftime('%d-%m-%Y %H:%M:%S')
+  def run_widgets
+    @widgets.values.each { |w| w.run }
   end
 
 end
 
-I3Bar.new.stdout_attach(5)
+I3Bar.new.stdout_attach(1)
