@@ -23,7 +23,7 @@ set $ws_5  5
 set $ws_6  6
 set $ws_7  7
 set $ws_8  8
-set $ws_9  9:PHALANX
+set $ws_9  9
 set $ws_10 10
 
 # Font for window titles. Will also be used by the bar unless a different font
@@ -65,7 +65,8 @@ bindsym Shift+XF86AudioRaiseVolume  exec amixer -q set Master toggle
 
 # Bind lockers & shooters
 exec xscreensaver -no-splash
-bindsym $mod+Shift+ugrave    exec xscreensaver-command --activate
+
+bindsym $mod+Shift+ugrave    workspace number 99, exec xscreensaver-command --activate
 bindsym Print                exec xfce4-screenshooter
 
 # Bind i3-ctl::outpad feature
@@ -200,11 +201,24 @@ mode "MIRV" {
   bindsym f exec thunar
   bindsym o exec opera
   bindsym c exec chromium-browser
-  bindsym m exec $term_exec cmus, split v, $term_exec alsamixer
+  bindsym m exec split h, exec vlc, $term_exec cmus, split v, $term_exec alsamixer,
   bindsym k exec gkrellm
   bindsym j exec jedit
   bindsym p exec /home/minasmazar/.i3/i3-ctl.sh phalanx
   bindsym b exec $term_exec rvm default exec pescobells demone --cli-audio-player=play
+
+  bindsym Escape mode "default"
+  bindsym $mod+m mode "default"
+}
+
+mode "LAUNCH" {
+  bindsym f workspace number "100:FILE", exec thunar, mode "default"
+  bindsym o exec opera, mode "default"
+  bindsym c exec chromium-browser, mode "default"
+  bindsym m workspace number "3:MEDIA", split v, $term_exec cmus, $term_exec alsamixer, mode "default"
+  bindsym k exec gkrellm, mode "default"
+  bindsym j exec jedit, mode "default"
+  bindsym p exec /home/minasmazar/.i3/i3-ctl.sh phalanx, mode "default"
 
   bindsym Escape mode "default"
   bindsym $mod+m mode "default"
@@ -223,7 +237,9 @@ bindsym $mod+r    mode "resize"
 bindsym $mod+u    mode "I3:MACROS"
 bindsym $mod+i    exec /home/minasmazar/.i3/i3-ctl.sh
 
-bindsym $mod+m    mode "mirv"
+#bindsym $mod+m    mode "MIRV"
+bindsym $mod+m    mode "LAUNCH"
+bindsym $mod+Shift+m exec xfce4-appfinder
 
 # Appplication assignments
 #assign [class="Chromium-browser"] 2:WWW
@@ -289,9 +305,10 @@ client.unfocused          $bcolor $bcolor #FFFF00 #292d2e
 # client.placeholder      #000000 #0c0c0c #ffffff #000000
 
 # exec rvm jruby do ruby ~/.i3/traythrow.rb
-exec pasystray
-# exec volumeicon
+# exec pasystray
+exec volumeicon
 exec xrandr --output VGA1 --right-of LVDS1
 exec feh --bg-scale ~/Immagini/392784-vintage-swirly-pattern.jpg
-exec conky -u 4
+# exec conky -u 4
 # exec x-terminal-emulator -x vim ~/.i3/config
+
