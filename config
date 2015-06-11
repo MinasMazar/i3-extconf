@@ -14,6 +14,7 @@ set $bcolor #044440
 set $fcolor #DD6633
 
 set $term_exec exec i3-sensible-terminal -e
+set $i3api exec ~/.i3/i3api
 
 set $ws_1  1
 set $ws_2  2
@@ -215,10 +216,9 @@ mode "LAUNCH" {
   bindsym f workspace number "100:FILE", exec thunar, mode "default"
   bindsym o exec opera, mode "default"
   bindsym c exec chromium-browser, mode "default"
-  bindsym m workspace number "3:MEDIA", split v, $term_exec cmus, $term_exec alsamixer, mode "default"
+  bindsym m workspace number "3:MEDIA", split v, exec rhythmbox, $term_exec alsamixer, mode "default"
   bindsym k exec gkrellm, mode "default"
   bindsym j exec jedit, mode "default"
-  bindsym p exec /home/minasmazar/.i3/i3-ctl.sh phalanx, mode "default"
 
   bindsym Escape mode "default"
   bindsym $mod+m mode "default"
@@ -226,7 +226,9 @@ mode "LAUNCH" {
 
 mode "I3:MACROS" {
 
-  bindsym c  $term_exec rvm default exec cappuccino
+  bindsym F5  $term_exec rvm default exec cappuccino, $term_exec rvm default exec cappuccino, mode "default"
+  bindsym F4  exec i3-sensible-terminal, split v, exec i3-sensible-terminal, split h, exec i3-sensible-terminal, mode "default"
+  bindsym F2  workspace number "2:WWW", layout tabbed, exec opera, exec chromium-browser, mode "default"
 
   bindsym Escape mode "default"
   bindsym Return mode "default"
@@ -235,7 +237,8 @@ mode "I3:MACROS" {
 
 bindsym $mod+r    mode "resize"
 bindsym $mod+u    mode "I3:MACROS"
-bindsym $mod+i    exec /home/minasmazar/.i3/i3-ctl.sh
+bindsym $mod+t    exec $i3api get_workspaces | dmenu -b | $i3api goto_workspace _stdin_
+bindsym $mod+Shift+t    exec $i3api get_workspaces | dmenu -b | $i3api move_to_workspace _stdin_
 
 #bindsym $mod+m    mode "MIRV"
 bindsym $mod+m    mode "LAUNCH"

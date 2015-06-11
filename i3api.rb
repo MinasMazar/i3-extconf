@@ -1,8 +1,5 @@
-#!/bin/env ruby
 
 require 'json'
-require 'thor'
-require 'pry'
 
 module I3
   module API
@@ -30,6 +27,10 @@ module I3
       i3cmd "workspace #{ws}"
     end
 
+    def move_to_workspace(ws)
+      i3cmd "move container to workspace #{ws}"
+    end
+
     def goto_output(out)
       i3cmd "focus output #{out}"
     end
@@ -47,15 +48,29 @@ module I3
     def i3send(*msg)
       msg = msg.join(", ")
       ret = JSON.parse `i3-msg #{msg}`
-      puts "i3 send :: [ #{msg} ] => #{ret}"
+      $stderr.puts "i3 send :: [ #{msg} ] => #{ret}" if @debug
       ret
     end
   
   end
   
-  module Macros
+  module ExtendedAPI
 
     include API
+
+    def get_workspaces
+      super.map {|w| w["name"] }
+    end
+
+    def goto_workspace(ws)
+      if ws ==  'autonext'
+        last_ws = get_workspaces.last
+        ws = last_ws.succ
+      end
+      super ws
+    end
+
+    alias :move_to_workspace :goto_workspace
 
     def goto_and_hold_workspace(ws = nil)
       goto_workspace ws if ws
@@ -86,62 +101,9 @@ module I3
 
 end
 
-class SubcommandExampleCLI < Thor
-
-  desc "subcommand", "subcommand action"
-  def subcommand
-    puts "#{self.class}##{__method__}"
-  end
+@driver = Object.new.extend(I3::ExtendedAPI)
+@driver.instance_variable_set :@debug, false
+if ARGV.any?
+  cmd = ARGV.map { |arg| arg == "_stdin_" ? $stdin.readline.chomp : arg }
+  puts @driver.send *cmd
 end
-  
-class I3CLI < Thor
-  include I3::Macros
-
-  desc "massterm", "Move to <workspace (def.8)> and start <terms (def.3)> terms."
-  option :workspace, :default => 8
-  option :terms, :default => 3
-  def massterm
-    i3cmd ["exec x-terminal-emulator", "exec x-terminal-emulator", "split v", "exec x-terminal-emulator", "split h" ]
-  end
-
-  desc "phalanx", "Start phalanx-prybot sessions."
-  def phalanx
-    i3cmd [ "workspace 9:PHALANX", "split h" ]
-    exec "urxvt -e rvm default do phalanx-prybot.rb S126_IT"
-    exec "urxvt -e rvm default do phalanx-prybot.rb S126_IT"
-    i3cmd "workspace back_and_forth"
-  end
-
-  desc "bells", "Bells of Pescolanciano give us the current time."
-  def bells(action)
-    system "rvm default exec pescobells #{action}"
-  end
-
-  desc "subcommand", "Thor CLI: Subcommand example"
-  subcommand "subcommand", SubcommandExampleCLI
-
-  desc "outpad", "Escape current workspaces for all outputs"
-  def outpad
-    goto_outpads
-  end
-
-  desc "media", "Launch media compliant"
-  def media
-    goto_workspace "3:MEDIA"
-    i3cmd [ "split v" ]
-    exec "gxmms2"
-    exec "x-terminal-emulator -x alsamixer"
-    goto_workspace :back_and_forth
-  end
-
-  desc "pry", "Start PRY session inside CLI"
-  def pry
-    binding.pry
-  end
-
-end
-
-args = ARGV
-args = `echo massterm | dmenu`.chomp.split if args.empty?
-I3CLI.start args
-
