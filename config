@@ -16,16 +16,17 @@ set $fcolor #DD6633
 set $term_exec exec i3-sensible-terminal -e
 set $i3api exec ~/.i3/i3api
 
-set $ws_1  1
-set $ws_2  2
-set $ws_3  3
-set $ws_4  4
-set $ws_5  5
-set $ws_6  6
-set $ws_7  7
-set $ws_8  8
-set $ws_9  9
-set $ws_10 10
+set $ws_1    1
+set $ws_2    2
+set $ws_3    3
+set $ws_4    4
+set $ws_5    5
+set $ws_6    6
+set $ws_7    7
+set $ws_8    8
+set $ws_9    9
+set $ws_10  10
+set $outpad 1001
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below. ISO 10646 = Unicode
@@ -69,9 +70,6 @@ exec xscreensaver -no-splash
 
 bindsym $mod+Shift+ugrave    workspace number 99, exec xscreensaver-command --activate
 bindsym Print                exec xfce4-screenshooter
-
-# Bind i3-ctl::outpad feature
-bindsym $mod+Shift+o  exec /home/minasmazar/.i3/i3-ctl.sh outpad
 
 # Bind util X11 bins
 bindsym Shift+Pause          $term_exec xev
@@ -151,6 +149,7 @@ bindsym $mod+7 workspace number $ws_7
 bindsym $mod+8 workspace number $ws_8
 bindsym $mod+9 workspace number $ws_9
 bindsym $mod+0 workspace number $ws_10
+bindsym $mod+o workspace number $outpad
 
 # move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace number $ws_1
