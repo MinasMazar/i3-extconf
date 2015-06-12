@@ -233,7 +233,7 @@ bindsym $mod+r    mode "resize"
 #bindsym $mod+m    mode "MIRV"
 bindsym $mod+m    mode "LAUNCH"
 
-bindsym $mod+t    exec $i3api get_workspaces | dmenu -b | $i3api goto_workspace _stdin_
+bindsym $mod+t    exec $i3api get_all_workspaces | dmenu -b | $i3api goto_workspace _stdin_
 bindsym $mod+Shift+t    exec $i3api get_workspaces | dmenu -b | $i3api move_to_workspace _stdin_
 bindsym $mod+Shift+m exec xfce4-appfinder
 

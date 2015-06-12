@@ -62,6 +62,10 @@ module I3
       super.map {|w| w["name"] }
     end
 
+    def get_all_workspaces
+      get_workspaces << 'autonext'
+    end
+
     def goto_workspace(ws)
       if ws ==  'autonext'
         last_ws = get_workspaces.last
