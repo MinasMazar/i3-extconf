@@ -110,7 +110,8 @@ bindsym $mod+h split h
 bindsym $mod+v split v
 
 # enter fullscreen mode for the focused container
-bindsym $mod+f fullscreen
+#bindsym $mod+f fullscreen
+bindsym $mod+Tab fullscreen
 
 # change container layout (stacked, tabbed, toggle split)
 bindsym $mod+s layout stacking
@@ -212,38 +213,32 @@ mode "MIRV" {
 }
 
 mode "LAUNCH" {
-  bindsym f workspace number "100:FILE", exec thunar, mode "default"
+  bindsym f exec thunar, mode "default"
+  bindsym Shift+f workspace number "100:FILE", exec thunar, mode "default"
   bindsym o exec opera, mode "default"
   bindsym c exec chromium-browser, mode "default"
-  bindsym m workspace number "3:MEDIA", split v, exec rhythmbox, $term_exec alsamixer, mode "default"
   bindsym k exec gkrellm, mode "default"
   bindsym j exec jedit, mode "default"
+
+  bindsym F5  $term_exec rvm default exec cappuccino, $term_exec rvm default exec cappuccino, mode "default"
+  bindsym F4  exec i3-sensible-terminal, split v, exec i3-sensible-terminal, split h, exec i3-sensible-terminal, mode "default"
+  bindsym F2  workspace number "2:WWW", layout tabbed, exec opera, exec chromium-browser, mode "default"
+  bindsym F3  workspace number "3:MEDIA", layout stacking, $term_exec alsamixer, exec rhythmbox, mode "default"
 
   bindsym Escape mode "default"
   bindsym $mod+m mode "default"
 }
 
-mode "I3:MACROS" {
-
-  bindsym F5  $term_exec rvm default exec cappuccino, $term_exec rvm default exec cappuccino, mode "default"
-  bindsym F4  exec i3-sensible-terminal, split v, exec i3-sensible-terminal, split h, exec i3-sensible-terminal, mode "default"
-  bindsym F2  workspace number "2:WWW", layout tabbed, exec opera, exec chromium-browser, mode "default"
-
-  bindsym Escape mode "default"
-  bindsym Return mode "default"
-  bindsym $mod+u mode "default"
-}
-
 bindsym $mod+r    mode "resize"
-bindsym $mod+u    mode "I3:MACROS"
-bindsym $mod+t    exec $i3api get_workspaces | dmenu -b | $i3api goto_workspace _stdin_
-bindsym $mod+Shift+t    exec $i3api get_workspaces | dmenu -b | $i3api move_to_workspace _stdin_
-
 #bindsym $mod+m    mode "MIRV"
 bindsym $mod+m    mode "LAUNCH"
+
+bindsym $mod+t    exec $i3api get_workspaces | dmenu -b | $i3api goto_workspace _stdin_
+bindsym $mod+Shift+t    exec $i3api get_workspaces | dmenu -b | $i3api move_to_workspace _stdin_
 bindsym $mod+Shift+m exec xfce4-appfinder
 
 # Appplication assignments
+for_window [class="Audacious"] floating enable
 #assign [class="Chromium-browser"] 2:WWW
 #assign [class="Opera"] 2:WWW
 #assign [class="thunar"] 3:FILE
@@ -260,7 +255,7 @@ for_window [class="Xfce4-notifyd"] floating enable
 #for_window [class="gxmms2" title="(?i)Playlist Editor"] move to workspace 6:MEDIA , floating disable
 
 # Defining borders
-new_window pixel 4
+new_window pixel 2
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
