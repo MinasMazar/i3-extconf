@@ -39,6 +39,10 @@ module I3
       i3cmd "exec \"#{cmd}\""
     end
 
+    def method_missing(m, *a, &b)
+      i3send "#{m} " + a.join(" ")
+    end
+
     def i3cmd(cmd)
       i3send cmd
     end
@@ -105,9 +109,17 @@ module I3
 
 end
 
-@driver = Object.new.extend(I3::ExtendedAPI)
-@driver.instance_variable_set :@debug, false
-if ARGV.any?
-  cmd = ARGV.map { |arg| arg == "_stdin_" ? $stdin.readline.chomp : arg }
-  puts @driver.send *cmd
+if $0 == __FILE__
+  @driver = Object.new.extend(I3::ExtendedAPI)
+  @driver.instance_variable_set :@debug, false
+  if ARGV.any?
+    cmd = ARGV.map { |arg| arg == "_stdin_" ? $stdin.readline.chomp : arg }
+    puts @driver.send *cmd
+  else
+    loop do
+      cmd = $stdin.readline.chomp
+      break if cmd == ":break"
+      puts @driver.send *(cmd.split)
+    end
+  end
 end
