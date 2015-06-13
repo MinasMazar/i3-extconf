@@ -219,6 +219,7 @@ mode "LAUNCH" {
   bindsym c exec chromium-browser, mode "default"
   bindsym k exec gkrellm, mode "default"
   bindsym j exec jedit, mode "default"
+  bindsym v exec gvim, mode "default"
 
   bindsym F5  $term_exec rvm default exec cappuccino, $term_exec rvm default exec cappuccino, mode "default"
   bindsym F4  exec i3-sensible-terminal, split v, exec i3-sensible-terminal, split h, exec i3-sensible-terminal, mode "default"
@@ -301,6 +302,7 @@ client.unfocused          $bcolor $bcolor #FFFF00 #292d2e
 # client.urgent           #2f343a #900000 #ffffff #900000
 # client.placeholder      #000000 #0c0c0c #ffffff #000000
 
+exec --no-startup-id nm-applet
 # exec rvm jruby do ruby ~/.i3/traythrow.rb
 # exec pasystray
 exec volumeicon
