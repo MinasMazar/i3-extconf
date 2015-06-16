@@ -221,11 +221,12 @@ mode "LAUNCH" {
   bindsym j exec jedit, mode "default"
   bindsym v exec gvim, mode "default"
 
-  bindsym F5  $term_exec rvm default exec cappuccino, $term_exec rvm default exec cappuccino, mode "default"
-  bindsym F4  exec i3-sensible-terminal, split v, exec i3-sensible-terminal, split h, exec i3-sensible-terminal, mode "default"
+  bindsym F7  $term_exec rvm default exec cappuccino, $term_exec rvm default exec cappuccino, mode "default"
+  bindsym F6  exec i3-sensible-terminal, split v, exec i3-sensible-terminal, split h, exec i3-sensible-terminal, mode "default"
+
   bindsym F2  workspace number "2:WWW", layout tabbed, exec opera, exec chromium-browser, mode "default"
   bindsym F3  workspace number "3:MEDIA", layout stacking, $term_exec alsamixer, exec rhythmbox, mode "default"
-
+  bindsym F4  workspace number "10:FILE", $term_exec mc, exec i3-sensible-terminal, $term_exec mc, mode "default"
   bindsym Escape mode "default"
   bindsym $mod+m mode "default"
 }
@@ -235,8 +236,10 @@ bindsym $mod+r    mode "resize"
 bindsym $mod+m    mode "LAUNCH"
 
 bindsym $mod+igrave    $i3api get_all_workspaces | dmenu -b | $i3api goto_workspace _stdin_
-bindsym $mod+Shift+igrave    $i3api get_workspaces | dmenu -b | $i3api move_to_workspace _stdin_
+bindsym $mod+Shift+igrave    $i3api get_all_workspaces | dmenu -b | $i3api move_to_workspace _stdin_
 bindsym $mod+Shift+m exec xfce4-appfinder
+
+bindsym $mod+i $term_exec ~/.i3/i3api interactive
 
 # Appplication assignments
 for_window [class="Audacious"] floating enable
