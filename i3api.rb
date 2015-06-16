@@ -78,7 +78,13 @@ module I3
       super ws
     end
 
-    alias :move_to_workspace :goto_workspace
+    def mote_to_workspace(ws)
+      if ws == 'autonext'
+        last_ws = get_workspaces.last
+        ws = last_ws.succ
+      end
+      super ws
+    end
 
     def goto_and_hold_workspace(ws = nil)
       goto_workspace ws if ws
@@ -113,8 +119,13 @@ if $0 == __FILE__
   @driver = Object.new.extend(I3::ExtendedAPI)
   @driver.instance_variable_set :@debug, false
   if ARGV.any?
-    cmd = ARGV.map { |arg| arg == "_stdin_" ? $stdin.readline.chomp : arg }
-    puts @driver.send *cmd
+    if ARGV[0] =~ /interactive/
+      require 'pry'
+      @driver.pry
+    else
+      cmd = ARGV.map { |arg| arg == "_stdin_" ? $stdin.readline.chomp : arg }
+      puts @driver.send *cmd
+    end
   else
     loop do
       cmd = $stdin.readline.chomp
