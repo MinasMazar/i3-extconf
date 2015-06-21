@@ -74,7 +74,8 @@ bindsym Shift+XF86AudioRaiseVolume  exec amixer -q set Master toggle
 # Bind lockers & shooters
 exec xscreensaver -no-splash
 
-bindsym $mod+Shift+ugrave    workspace $outpad, exec xscreensaver-command --activate
+bindsym $mod+ugrave          workspace trans, workspace number $outpad
+bindsym $mod+Shift+ugrave    workspace trans, workspace $outpad, exec xscreensaver-command --activate
 bindsym Print                exec xfce4-screenshooter
 
 # Bind util X11 bins
@@ -135,9 +136,9 @@ bindsym $mod+Shift+minus move scratchpad
 bindsym $mod+minus scratchpad show
 
 bindsym $mod+period workspace next
-bindsym $mod+comma workspace prev
+bindsym $mod+comma  workspace prev
 bindsym $mod+Shift+period move container to workspace next
-bindsym $mod+Shift+comma move container to workspace prev
+bindsym $mod+Shift+comma  move container to workspace prev
 
 # switch to workspace
 bindsym $mod+1 workspace number $ws_1
@@ -150,7 +151,6 @@ bindsym $mod+7 workspace number $ws_7
 bindsym $mod+8 workspace number $ws_8
 bindsym $mod+9 workspace number $ws_9
 bindsym $mod+0 workspace number $ws_10
-bindsym $mod+o workspace number $outpad
 
 # move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace number $ws_1
