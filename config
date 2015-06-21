@@ -16,18 +16,22 @@ set $fcolor #DD6633
 set $term_exec exec i3-sensible-terminal -e
 set $i3api exec ~/.i3/i3api
 
-set $ws_1    1
-set $ws_2    2
-set $ws_3    3
-set $ws_4    4
-set $ws_5    5
-set $ws_6    6
-set $ws_7    7
-set $ws_8    8
-set $ws_9    9
-set $ws_10  10
+set $ws_1     1: main
+set $ws_2    20: www
+set $ws_3    30: media
+set $ws_4    40
+set $ws_5    50
+set $ws_6    60
+set $ws_7    70
+set $ws_8    80
+set $ws_9    90: i3/system
+set $ws_10  100: file
 set $outpad 1001
 
+set $ws_main  $ws_1
+set $ws_www   $ws_2
+set $ws_media $ws_3
+set $ws_fm    $ws_10
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below. ISO 10646 = Unicode
                      
@@ -35,7 +39,8 @@ set $outpad 1001
 # clear in small sizes. However, if you need a lot of unicode glyphs or
 # right-to-left text rendering, you should instead use pango for rendering and
 # chose a FreeType font, such as:
-font pango:DejaVu Sans Mono 8
+#font pango:DejaVu Sans Mono 8
+font pango:FontAwesome 8, Terminus 8
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -44,6 +49,7 @@ focus_follows_mouse yes
 
 # start a terminal
 bindsym $mod+Return exec i3-sensible-terminal
+bindsym $mod+Shift+Return exec i3-sensible-terminal --title=float-terminal 
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -68,22 +74,16 @@ bindsym Shift+XF86AudioRaiseVolume  exec amixer -q set Master toggle
 # Bind lockers & shooters
 exec xscreensaver -no-splash
 
-bindsym $mod+Shift+ugrave    workspace number 99, exec xscreensaver-command --activate
+bindsym $mod+Shift+ugrave    workspace $outpad, exec xscreensaver-command --activate
 bindsym Print                exec xfce4-screenshooter
 
 # Bind util X11 bins
 bindsym Shift+Pause          $term_exec xev
 
-# change focus
-#bindsym $mod+l focus left
-#bindsym $mod+k focus down
-#bindsym $mod+o focus up
-#bindsym $mod+p focus right
-
 bindsym $mod+j focus left
-bindsym $mod+k focus right
+bindsym $mod+k focus down
 bindsym $mod+l focus up
-bindsym $mod+ograve focus down
+bindsym $mod+ograve focus right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
@@ -134,10 +134,10 @@ bindsym $mod+q focus child
 bindsym $mod+Shift+minus move scratchpad
 bindsym $mod+minus scratchpad show
 
-bindsym $mod+n workspace next
-bindsym $mod+b workspace prev
-bindsym $mod+Shift+n move container to workspace next
-bindsym $mod+Shift+b move container to workspace prev
+bindsym $mod+period workspace next
+bindsym $mod+comma workspace prev
+bindsym $mod+Shift+period move container to workspace next
+bindsym $mod+Shift+comma move container to workspace prev
 
 # switch to workspace
 bindsym $mod+1 workspace number $ws_1
@@ -171,6 +171,7 @@ bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Escape exec killall i3-nagbar
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -197,21 +198,6 @@ mode "resize" {
         bindsym $mod+r mode "default"
 }
 
-mode "MIRV" {
-  bindsym Return exec x-terminal-emulator
-  bindsym f exec thunar
-  bindsym o exec opera
-  bindsym c exec chromium-browser
-  bindsym m exec split h, exec vlc, $term_exec cmus, split v, $term_exec alsamixer,
-  bindsym k exec gkrellm
-  bindsym j exec jedit
-  bindsym p exec /home/minasmazar/.i3/i3-ctl.sh phalanx
-  bindsym b exec $term_exec rvm default exec pescobells demone --cli-audio-player=play
-
-  bindsym Escape mode "default"
-  bindsym $mod+m mode "default"
-}
-
 mode "LAUNCH" {
   bindsym f exec thunar, mode "default"
   bindsym Shift+f workspace number "100:FILE", exec thunar, mode "default"
@@ -224,39 +210,26 @@ mode "LAUNCH" {
   bindsym F7  $term_exec rvm default exec cappuccino, $term_exec rvm default exec cappuccino, mode "default"
   bindsym F6  exec i3-sensible-terminal, split v, exec i3-sensible-terminal, split h, exec i3-sensible-terminal, mode "default"
 
-  bindsym F2  workspace number "2:WWW", layout tabbed, exec opera, exec chromium-browser, mode "default"
-  bindsym F3  workspace number "3:MEDIA", layout stacking, $term_exec alsamixer, exec rhythmbox, mode "default"
-  bindsym F4  workspace number "10:FILE", $term_exec mc, exec i3-sensible-terminal, $term_exec mc, mode "default"
+  bindsym F2  workspace $ws_www, layout tabbed, exec opera, exec chromium-browser, mode "default"
+  bindsym F3  workspace $ws_media, layout stacking, $term_exec alsamixer, exec rhythmbox, mode "default"
+  bindsym F4  workspace $ws_fm, $term_exec mc, exec i3-sensible-terminal, $term_exec mc, mode "default"
   bindsym Escape mode "default"
   bindsym $mod+m mode "default"
 }
 
 bindsym $mod+r    mode "resize"
-#bindsym $mod+m    mode "MIRV"
 bindsym $mod+m    mode "LAUNCH"
 
-bindsym $mod+igrave    $i3api get_all_workspaces | dmenu -b | $i3api goto_workspace _stdin_
-bindsym $mod+Shift+igrave    $i3api get_all_workspaces | dmenu -b | $i3api move_to_workspace _stdin_
+bindsym $mod+apostrophe workspace back_and_forth
+bindsym $mod+Shift+apostrophe move container to workspace back_and_forth
+bindsym $mod+igrave           $i3api get_workspaces | dmenu -b | $i3api goto_workspace _stdin_
+bindsym $mod+Shift+igrave     $i3api get_workspaces | dmenu -b | $i3api move_to_workspace _stdin_
 bindsym $mod+Shift+m exec xfce4-appfinder
 
-bindsym $mod+i $term_exec ~/.i3/i3api interactive
-
 # Appplication assignments
+for_window [title=".*float-terminal.*"] floating enable
 for_window [class="Audacious"] floating enable
-#assign [class="Chromium-browser"] 2:WWW
-#assign [class="Opera"] 2:WWW
-#assign [class="thunar"] 3:FILE
-#assign [class="wicd-client.py"] 4:SYS
-#assign [title="win0"] 5:DEV
-#assign [class="gxmms"] 6:MEDIA, floating disable
-#assign [class="libreoffice"] 7:OFFICE
-#
 for_window [class="Xfce4-notifyd"] floating enable
-#for_window [class="thunar"] move to workspace 3:FILE
-#for_window [class="gkrellm"] move to workspace 4:SYS , floating enable
-#for_window [class="Conky"] move to workspace 4:SYS
-#for_window [class="gxmms2"] move to workspace 6:MEDIA , floating disable
-#for_window [class="gxmms2" title="(?i)Playlist Editor"] move to workspace 6:MEDIA , floating disable
 
 # Defining borders
 new_window pixel 2
@@ -269,12 +242,9 @@ bar {
         output VGA1
 
         workspace_buttons yes
-        # strip_workspace_numbers yes
         status_command i3status
-        #status_command ruby /home/minasmazar/.i3/i3ba.rb
 
-        # font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
-        font pango:DejaVu Sans Mono 8
+        font pango:FontAwesome 8, Terminus 8
         colors {
           background $bcolor
           statusline #ffffff
@@ -306,11 +276,7 @@ client.unfocused          $bcolor $bcolor #FFFF00 #292d2e
 # client.placeholder      #000000 #0c0c0c #ffffff #000000
 
 exec --no-startup-id nm-applet
-# exec rvm jruby do ruby ~/.i3/traythrow.rb
-# exec pasystray
 exec volumeicon
 exec xrandr --output VGA1 --right-of LVDS1
 exec feh --bg-scale ~/Immagini/392784-vintage-swirly-pattern.jpg
-# exec conky -u 4
-# exec x-terminal-emulator -x vim ~/.i3/config
-exec $i3api workspace 99:i3-config, split h, exec gvim ~/.i3/config, exec i3-sensible-terminal, workspace 1
+exec $i3api workspace $ws_9, split h, exec gvim ~/.i3/config, exec i3-sensible-terminal, workspace $ws_main
