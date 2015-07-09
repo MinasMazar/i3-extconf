@@ -3,11 +3,19 @@
 class I3Bar
 
   class Widget
-    def initialize(timeout, &proc)
+    def initialize(name, timeout, options = {}, &proc)
+      @name = name
       @text = "..."
       @active = true
+      @options = options
       self.timeout = timeout
       self.set_proc(&proc)
+    end
+    def pos
+      @options[:pos] || -1
+    end
+    def active?
+      @options[:active] != false
     end
     def set_proc(&proc)
       @proc = proc
@@ -27,18 +35,18 @@ class I3Bar
       end
     end
     def eval
-      @active ? @text : ''
+      active? ? @text : ''
     end
   end
 
   def initialize
-    @widgets = {}
+    @widgets = []
     init_widgets
     run_widgets
   end
 
   def to_s
-    @widgets.values.map(&:eval).map(&:chomp).join(" | ").to_s
+    @widgets.map(&:eval).map(&:chomp).join(" | ").to_s
   end
 
   def to_stdout
@@ -56,19 +64,29 @@ class I3Bar
   private
 
   def init_widgets
-    @widgets[:hostname] = Widget.new 0 do
+    hostname_w = Widget.new :hostname, 0, :pos => 1 do
       [`whoami`, '@',  `hostname`].map(&:chomp).join
     end
-    @widgets[:random] = Widget.new 4 do
+    random_w = Widget.new :random, 4, :pos => 2, :active => false do
       ( ('a'..'z').to_a + ('A'..'Z').to_a + ('0'..'9').to_a ).shuffle.join
     end
-    @widgets[:time] = Widget.new 1 do
+    time_w = Widget.new :time, 1, :pos => 4 do
       Time.new.strftime('%d-%m-%Y %H:%M:%S')
     end
+    wifi_w = Widget.new :wifi, 10, :pos => 3 do
+      out = `iwconfig`.gsub("\n", " ")
+      if md = out.match(/ESSID:"(.+)"/)
+        "WiFi: #{md[1]}"
+      else
+        "WiFi: down"
+      end
+    end
+    @widgets = [ hostname_w, random_w, time_w, wifi_w ]
+    @widgets.sort_by! {|w| w.pos }
   end
 
   def run_widgets
-    @widgets.values.each { |w| w.run }
+    @widgets.each { |w| w.run if w.active? }
   end
 
 end
