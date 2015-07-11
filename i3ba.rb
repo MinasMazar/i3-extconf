@@ -64,24 +64,34 @@ class I3Bar
   private
 
   def init_widgets
-    hostname_w = Widget.new :hostname, 0, :pos => 1 do
+    @widgets << ( Widget.new :hostname, 0, :pos => 1 do
       [`whoami`, '@',  `hostname`].map(&:chomp).join
-    end
-    random_w = Widget.new :random, 4, :pos => 2, :active => false do
+    end )
+    @widgets << ( Widget.new :audacious, 6, :pos => 20 do
+      path = File.expand_path '../audacious_current_track.txt', __FILE__
+      File.read path
+    end )
+    @widgets << ( Widget.new :random, 4, :pos => 31, :active => false do
       ( ('a'..'z').to_a + ('A'..'Z').to_a + ('0'..'9').to_a ).shuffle.join
-    end
-    time_w = Widget.new :time, 1, :pos => 4 do
+    end )
+    @widgets << ( Widget.new :time, 1, :pos => 40 do
       Time.new.strftime('%d-%m-%Y %H:%M:%S')
-    end
-    wifi_w = Widget.new :wifi, 10, :pos => 3 do
-      out = `iwconfig`.gsub("\n", " ")
-      if md = out.match(/ESSID:"(.+)"/)
-        "WiFi: #{md[1]}"
+    end )
+    @widgets << ( Widget.new :wifi, 10, :pos => 30 do
+      iwc_out = `iwconfig`.gsub("\n", " ")
+      out = "WiFi: "
+      if md = iwc_out.match(/ESSID:"(.+)"/)
+        out += "#{md[1]} "
       else
-        "WiFi: down"
+        out += "down "
       end
-    end
-    @widgets = [ hostname_w, random_w, time_w, wifi_w ]
+      if md = iwc_out.match(/Link Quality=(\d+)\/(\d+)/)
+        signal, range = md[1].to_i, md[2].to_i
+        signal_percent = signal * 100 / range
+        out += " (#{signal_percent}%) "
+      end
+      out
+    end )
     @widgets.sort_by! {|w| w.pos }
   end
 

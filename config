@@ -14,13 +14,13 @@ set $bcolor #044440
 set $fcolor #DD6633
 
 set $term_exec exec i3-sensible-terminal -e
-set $i3api exec ~/.i3/i3api
+set $i3api exec i3rb
 
 set $ws_1     1: main
-set $ws_2    20: www
-set $ws_3    30: media
-set $ws_4    40
-set $ws_5    50
+set $ws_2     2: ogame
+set $ws_3    30: www
+set $ws_4    40: media
+set $ws_5    50: raspberry
 set $ws_6    60
 set $ws_7    70
 set $ws_8    80
@@ -28,10 +28,11 @@ set $ws_9    90: i3/system
 set $ws_10  100: file
 set $outpad 1001
 
-set $ws_main  $ws_1
-set $ws_www   $ws_2
-set $ws_media $ws_3
-set $ws_fm    $ws_10
+set $ws_main   1: main
+set $ws_www   30: www
+set $ws_media 40: media
+set $ws_fm   100: file
+
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below. ISO 10646 = Unicode
                      
@@ -135,10 +136,13 @@ bindsym $mod+q focus child
 bindsym $mod+Shift+minus move scratchpad
 bindsym $mod+minus scratchpad show
 
+bindsym $mod+Next workspace next
+bindsym $mod+Prior  workspace prev
 bindsym $mod+period workspace next
 bindsym $mod+comma  workspace prev
-bindsym $mod+Shift+period move container to workspace next
-bindsym $mod+Shift+comma  move container to workspace prev
+
+bindsym $mod+Shift+Next move container to workspace next, workspace next
+bindsym $mod+Shift+Prior  move container to workspace prev, workspace prev
 
 # switch to workspace
 bindsym $mod+1 workspace number $ws_1
@@ -207,11 +211,13 @@ mode "LAUNCH" {
   bindsym j exec jedit, mode "default"
   bindsym v exec gvim, mode "default"
 
+  bindsym s $term_exec rvm default exec skynet pry S126_IT --config-file .skynet-config.yaml, mode "default"
+
   bindsym F7  $term_exec rvm default exec cappuccino, $term_exec rvm default exec cappuccino, mode "default"
   bindsym F6  exec i3-sensible-terminal, split v, exec i3-sensible-terminal, split h, exec i3-sensible-terminal, mode "default"
 
   bindsym F2  workspace $ws_www, layout tabbed, exec opera, exec chromium-browser, mode "default"
-  bindsym F3  workspace $ws_media, layout stacking, $term_exec alsamixer, exec rhythmbox, mode "default"
+  bindsym F3  workspace $ws_media, layout stacking, $term_exec alsamixer, exec audacious,  mode "default"
   bindsym F4  workspace $ws_fm, $term_exec mc, exec i3-sensible-terminal, $term_exec mc, mode "default"
   bindsym Escape mode "default"
   bindsym $mod+m mode "default"
@@ -228,8 +234,8 @@ bindsym $mod+Shift+m exec xfce4-appfinder
 
 # Appplication assignments
 for_window [title=".*float-terminal.*"] floating enable
-for_window [class="Audacious"] floating enable
 for_window [class="Xfce4-notifyd"] floating enable
+for_window [class="Gimp"] workspace gimp, floating enable
 
 # Defining borders
 new_window pixel 2
@@ -240,9 +246,11 @@ bar {
         position top
         output LVDS1
         output VGA1
+	tray_output LVDS1
 
         workspace_buttons yes
-        status_command i3status
+        #status_command i3status
+        status_command ruby ~/.i3/i3ba.rb
 
         font pango:FontAwesome 8, Terminus 8
         colors {
@@ -276,7 +284,8 @@ client.unfocused          $bcolor $bcolor #FFFF00 #292d2e
 # client.placeholder      #000000 #0c0c0c #ffffff #000000
 
 exec --no-startup-id nm-applet
-exec volumeicon
+exec --no-startup-id volumeicon
 exec xrandr --output VGA1 --right-of LVDS1
-exec feh --bg-scale ~/Immagini/392784-vintage-swirly-pattern.jpg
+exec rerun -p wallpaper "feh --bg-scale ~/.i3/wallpaper"
 exec $i3api workspace $ws_9, split h, exec gvim ~/.i3/config, exec i3-sensible-terminal, workspace $ws_main
+
