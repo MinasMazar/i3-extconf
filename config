@@ -35,6 +35,8 @@ set $ws_www   30: www
 set $ws_media 40: media
 set $ws_fm   100: file
 
+set $Outpad focus output left, workspace "OUTPAD L", focus output right, workspace "OUTPAD R" 
+
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below. ISO 10646 = Unicode
                      
@@ -69,6 +71,7 @@ bindsym XF86AudioPlay               exec xmms2 toggle
 bindsym XF86AudioStop               exec xmms2 stop
 bindsym XF86AudioPrev               exec xmms2 prev
 bindsym XF86AudioNext               exec xmms2 next
+bindsym XF86AudioMute               exec amixer -q set Master toggle
 bindsym XF86AudioLowerVolume        exec amixer -q set Master 2%- unmute
 bindsym XF86AudioRaiseVolume        exec amixer -q set Master 2%+ unmute
 bindsym Shift+XF86AudioLowerVolume  exec amixer -q set Master mute
@@ -77,8 +80,9 @@ bindsym Shift+XF86AudioRaiseVolume  exec amixer -q set Master toggle
 # Bind lockers & shooters
 exec xscreensaver -no-splash
 
-bindsym $mod+ugrave          workspace trans, workspace number $outpad
-bindsym $mod+Shift+ugrave    workspace trans, workspace $outpad, exec xscreensaver-command --activate
+bindsym $mod+ugrave          $Outpad
+bindsym $mod+Shift+ugrave    $Outpad, exec xscreensaver-command --activate
+
 bindsym Print                exec xfce4-screenshooter
 
 set $mode_system System (l) lock, (e) logout, (s) suspend, (h) hibernate, (r) reboot, (Shift+s) shutdown
@@ -226,6 +230,7 @@ mode "LAUNCH" {
   bindsym r exec chromium-browser, mode "default"
   bindsym k exec gkrellm, mode "default"
   bindsym j exec jedit, mode "default"
+<<<<<<< Updated upstream
   bindsym v exec gvim, mode "default"
   bindsym m $term_exec mc, mode "default"
   bindsym Shift+m workspace number "100: file", $term_exec mc, mode "default"
@@ -233,6 +238,10 @@ mode "LAUNCH" {
   bindsym c exec gvim ~/.i3/config, mode "default"
 
   bindsym b $term_exec rvm default do bifrost pry, mode "default"
+=======
+  bindsym e exec gvim, mode "default"
+  bindsym v $term_exec alsamixer, mode "default" 
+>>>>>>> Stashed changes
 
   bindsym s exec dmenu -b | $i3k exec i3-sensible-terminal -e rvm default exec skynet pry _stdin_ --config .skynet-config.yaml, mode "default"
 
@@ -244,6 +253,7 @@ mode "LAUNCH" {
   bindsym F2  workspace $ws_www, layout tabbed, exec opera, exec chromium-browser, mode "default"
   bindsym F3  workspace $ws_media, layout stacking, $term_exec alsamixer, exec audacious,  mode "default"
   bindsym F4  workspace $ws_fm, $term_exec mc, exec i3-sensible-terminal, $term_exec mc, mode "default"
+
   bindsym Escape mode "default"
   bindsym $mod+m mode "default"
 }
