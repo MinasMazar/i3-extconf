@@ -14,7 +14,7 @@ set $bcolor #044440
 set $fcolor #DD6633
 
 set $term_exec exec i3-sensible-terminal -e
-set $i3api exec i3rb
+set $i3k exec ~/.i3/i3k
 
 set $ws_1     1: main
 set $ws_2     2: ogame
@@ -23,12 +23,14 @@ set $ws_4    40: media
 set $ws_5    50: raspberry
 set $ws_6    60
 set $ws_7    70
-set $ws_8    80
+set $ws_8    80: games
 set $ws_9    90: i3/system
 set $ws_10  100: file
 set $outpad 1001
 
 set $ws_main   1: main
+set $ws_ogame  2: ogame
+set $ws_games 80: games
 set $ws_www   30: www
 set $ws_media 40: media
 set $ws_fm   100: file
@@ -78,6 +80,21 @@ exec xscreensaver -no-splash
 bindsym $mod+ugrave          workspace trans, workspace number $outpad
 bindsym $mod+Shift+ugrave    workspace trans, workspace $outpad, exec xscreensaver-command --activate
 bindsym Print                exec xfce4-screenshooter
+
+set $mode_system System (l) lock, (e) logout, (s) suspend, (h) hibernate, (r) reboot, (Shift+s) shutdown
+mode "$mode_system" {
+    bindsym l exec --no-startup-id i3exit lock, mode "default"
+    bindsym e exec --no-startup-id i3exit logout, mode "default"
+    bindsym s exec --no-startup-id i3exit suspend, mode "default"
+    bindsym h exec --no-startup-id i3exit hibernate, mode "default"
+    bindsym r exec --no-startup-id i3exit reboot, mode "default"
+    bindsym Shift+s exec --no-startup-id i3exit shutdown, mode "default"
+
+    # back to normal: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+Pause mode "$mode_system"
 
 # Bind util X11 bins
 bindsym Shift+Pause          $term_exec xev
@@ -204,17 +221,25 @@ mode "resize" {
 
 mode "LAUNCH" {
   bindsym f exec thunar, mode "default"
-  bindsym Shift+f workspace number "100:FILE", exec thunar, mode "default"
+  bindsym Shift+f workspace number "100: file", exec thunar, mode "default"
   bindsym o exec opera, mode "default"
-  bindsym c exec chromium-browser, mode "default"
+  bindsym r exec chromium-browser, mode "default"
   bindsym k exec gkrellm, mode "default"
   bindsym j exec jedit, mode "default"
   bindsym v exec gvim, mode "default"
+  bindsym m $term_exec mc, mode "default"
+  bindsym Shift+m workspace number "100: file", $term_exec mc, mode "default"
+  bindsym x $term_exec alsamixer, mode "default"
+  bindsym c exec gvim ~/.i3/config, mode "default"
 
-  bindsym s $term_exec rvm default exec skynet pry S126_IT --config-file .skynet-config.yaml, mode "default"
+  bindsym b $term_exec rvm default do bifrost pry, mode "default"
+
+  bindsym s exec dmenu -b | $i3k exec i3-sensible-terminal -e rvm default exec skynet pry _stdin_ --config .skynet-config.yaml, mode "default"
+
+  bindsym y exec dmenu -b | $i3k exec i3-sensible-terminal -e rvm default exec bifrost ytdl _dmenu_, mode "default"
 
   bindsym F7  $term_exec rvm default exec cappuccino, $term_exec rvm default exec cappuccino, mode "default"
-  bindsym F6  exec i3-sensible-terminal, split v, exec i3-sensible-terminal, split h, exec i3-sensible-terminal, mode "default"
+  bindsym F6  exec ib3-sensible-terminal, split v, exec i3-sensible-terminal, split h, exec i3-sensible-terminal, mode "default"
 
   bindsym F2  workspace $ws_www, layout tabbed, exec opera, exec chromium-browser, mode "default"
   bindsym F3  workspace $ws_media, layout stacking, $term_exec alsamixer, exec audacious,  mode "default"
@@ -223,20 +248,36 @@ mode "LAUNCH" {
   bindsym $mod+m mode "default"
 }
 
+mode "i3rb" {
+  bindsym i $term_exec rvm default do ruby ~/.i3/i3k.rb pry, mode "default"
+  bindsym w $i3k goto_workspace _dmenu_, mode "default"
+  bindsym e $i3k dmenu_loop, mode "default"
+  bindsym x exec xrandr --auto, exec  sleep 1 && xrandr --output VGA1 --right-of LVDS1, mode "default"
+
+  bindsym Escape mode "default"
+  bindsym $mod+i mode "default"
+}
+
+bindsym $mod+i mode "i3rb"
 bindsym $mod+r    mode "resize"
 bindsym $mod+m    mode "LAUNCH"
 
 bindsym $mod+apostrophe workspace back_and_forth
 bindsym $mod+Shift+apostrophe move container to workspace back_and_forth
-bindsym $mod+igrave           $i3api get_workspaces | dmenu -b | $i3api goto_workspace _stdin_
-bindsym $mod+Shift+igrave     $i3api get_workspaces | dmenu -b | $i3api move_to_workspace _stdin_
+bindsym $mod+igrave           exec $i3k get_workspace_names | dmenu -b | $i3k goto_workspace _stdin_
+bindsym $mod+Shift+igrave     exec $i3k get_workspace_names | dmenu -b | $i3k move_to_workspace _stdin_
 bindsym $mod+Shift+m exec xfce4-appfinder
 
 # Appplication assignments
 for_window [title=".*float-terminal.*"] floating enable
+for_window [class="Audacious"] -> workspace $ws_media
+for_window [class="i3k"] -> floating enable
 for_window [class="Xfce4-notifyd"] floating enable
-for_window [class="Gimp"] workspace gimp, floating enable
-
+for_window [class="Gimp"] -> workspace gimp, floating enable
+for_window [title="*Ogame*"] -> workspace $wp_ogame
+for_window [class="*chromium-browser*"] -> workspace $wp_www
+for_window [title="i3rb"] -> workspace $wp_config, floating enabled
+ 
 # Defining borders
 new_window pixel 2
 
@@ -286,6 +327,7 @@ client.unfocused          $bcolor $bcolor #FFFF00 #292d2e
 exec --no-startup-id nm-applet
 exec --no-startup-id volumeicon
 exec xrandr --output VGA1 --right-of LVDS1
-exec rerun -p wallpaper "feh --bg-scale ~/.i3/wallpaper"
-exec $i3api workspace $ws_9, split h, exec gvim ~/.i3/config, exec i3-sensible-terminal, workspace $ws_main
+exec feh --bg-scale ~/.i3/wallpworkspace $ws_9, split h, exec gvim ~/.i3/config, exec i3-sensible-terminal, workspace $ws_main
+exec i3-sensible-terminal -T bifrost -e rvm default do bifrost pry 
+exec i3-sensible-terminal -T i3rb -e rvm default do i3rb pry 
 
