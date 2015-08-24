@@ -1,0 +1,4 @@
+#!/bin/sh -l
+
+rvm default do ruby ~/.i3/i3k.rb $@
+

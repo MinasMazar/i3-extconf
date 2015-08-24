@@ -68,7 +68,7 @@ class I3Bar
       [`whoami`, '@',  `hostname`].map(&:chomp).join
     end )
     @widgets << ( Widget.new :audacious, 6, :pos => 20 do
-      path = File.expand_path '../audacious_current_track.txt', __FILE__
+      path = File.expand_path "../../.wartunes.queue", __FILE__
       File.read path
     end )
     @widgets << ( Widget.new :random, 4, :pos => 31, :active => false do
