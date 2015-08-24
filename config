@@ -242,10 +242,10 @@ mode "LAUNCH" {
 
   bindsym b $term_exec rvm default do bifrost pry, mode "default"
 
-  bindsym s exec dmenu -b | $i3k exec i3-sensible-terminal -e rvm default exec skynet pry _stdin_ --config .skynet-config.yaml, mode "default"
-  bindsym Shift+s exec dmenu -b | $i3k exec i3-sensible-terminal -e rvm default exec skynet rattack 11 _stdin_ --config .skynet-config.yaml, mode "default"
+  bindsym s exec i3-sensible-terminal -e rvm default exec skynet pry `dmenu -b` --config .skynet-config.yaml, mode "default"
+  bindsym Shift+s exec i3-sensible-terminal -e rvm default exec skynet rattack 11 `dmenu -b` --config .skynet-config.yaml, mode "default"
 
-  bindsym y exec dmenu -b | $i3k exec i3-sensible-terminal -e rvm default exec bifrost ytdl _dmenu_, mode "default"
+  bindsym y exec dmenu -b | $i3k exec i3-sensible-terminal -e rvm default exec bifrost ytdl `dmenu -b`, mode "default"
 
   bindsym F7  $term_exec rvm default exec cappuccino, $term_exec rvm default exec cappuccino, mode "default"
   bindsym F6  exec ib3-sensible-terminal, split v, exec i3-sensible-terminal, split h, exec i3-sensible-terminal, mode "default"
