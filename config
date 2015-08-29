@@ -34,6 +34,8 @@ set $ws_www   30: www
 set $ws_media 40: media
 set $ws_fm   100: file
 
+set $i3rb exec rvm default do i3rb
+
 set $Outpad focus output left, workspace "OUTPAD L", focus output right, workspace "OUTPAD R" 
 
 # Font for window titles. Will also be used by the bar unless a different font
@@ -190,6 +192,11 @@ bindsym $mod+Shift+8 move container to workspace number $ws_8
 bindsym $mod+Shift+9 move container to workspace number $ws_9
 bindsym $mod+Shift+0 move container to workspace number $ws_10
 
+# switch to workspace selected by dmenu
+bindsym $mod+igrave $i3rb goto_workspace _dmenu_ws_
+
+# move focused container to workspace selected by dmenu
+bindsym $mod+Shift+igrave $i3rb move_to_workspace _dmenu_ws_
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -233,7 +240,7 @@ mode "LAUNCH" {
   bindsym j exec jedit, mode "default"
   bindsym e exec gvim, mode "default"
   bindsym t exec totem, mode "default"
-  bindsym v $term_exec alsamixer, mode "default"
+  bindsym v $term_exec gvim, mode "default"
   bindsym m $term_exec mc, mode "default"
   bindsym Shift+m workspace number "100: file", $term_exec mc, mode "default"
   bindsym x $term_exec alsamixer, mode "default"
@@ -248,7 +255,8 @@ mode "LAUNCH" {
   bindsym y exec exec i3-sensible-terminal -e rvm default exec bifrost ytdl `dmenu -b`, mode "default"
 
   bindsym F7  $term_exec rvm default exec cappuccino, $term_exec rvm default exec cappuccino, mode "default"
-  bindsym F6  exec ib3-sensible-terminal, split v, exec i3-sensible-terminal, split h, exec i3-sensible-terminal, mode "default"
+
+  bindsym F6  exec i3-sensible-terminal -e rvm default exec skynet rattack 9 S126_IT --config .skynet-config.yaml, exec i3-sensible-terminal -e rvm default exec skynet rattack 9 S114_IT --config .skynet-config.yaml, exec i3-sensible-terminal -e rvm default exec skynet rattack 9 S133_IT --config .skynet-config.yaml, mode "default"
 
   bindsym F2  workspace $ws_www, layout tabbed, exec opera, exec chromium-browser, mode "default"
   bindsym F3  workspace $ws_media, layout stacking, $term_exec alsamixer, exec audacious,  mode "default"
@@ -266,11 +274,12 @@ mode "i3rb" {
   bindsym i $term_exec rvm default do i3rb pry, mode "default"
   bindsym w exec i3-msg workspace `dmenu -b`, mode "default"
 
+  bindsym h exec xmessage workspace handler, mode "default"
   bindsym Escape mode "default"
   bindsym $mod+i mode "default"
 }
 
-bindsym $mod+i mode "i3rb"
+bindsym $mod+i    mode "i3rb"
 bindsym $mod+r    mode "resize"
 bindsym $mod+m    mode "LAUNCH"
 
@@ -278,15 +287,18 @@ bindsym $mod+apostrophe workspace back_and_forth
 bindsym $mod+Shift+apostrophe move container to workspace back_and_forth
 bindsym $mod+Shift+m exec xfce4-appfinder
 
-# Appplication assignments
+# Floating assignments
 for_window [title=".*float-terminal.*"] floating enable
-for_window [class="Audacious"] -> workspace $ws_media
-for_window [class="i3k"] -> floating enable
+for_window [class="i3k"] floating enable
 for_window [class="Xfce4-notifyd"] floating enable
-for_window [class="Gimp"] -> workspace gimp, floating enable
-for_window [class=".*Opera"] -> workspace $wp_ogame
-for_window [class=".*Chromium-browser"] -> workspace $wp_www
-for_window [title="i3rb"] -> workspace "config", floating enable
+
+# Workspace assignments
+assign [class="Audacious"] $ws_media
+assign [class="Gimp"] gimp
+assign [class=".*Opera.*"] $ws_ogame
+assign [class=".*Chromium-browser.*"] $ws_www
+assign [class="gvim" title=".*i3.*config"] $ws_config
+assign [title="i3rb"] $ws_config
  
 # Defining borders
 new_window pixel 2

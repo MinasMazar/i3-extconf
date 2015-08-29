@@ -15,6 +15,10 @@ class I3::Kommando
     @cur = @modes[:main]
   end
 
+  def get_workspace_names
+    get_workspaces.map { |w| w["name"] }
+  end
+
   def run
     loop do
       dmenu_ret = @cur.run
@@ -25,4 +29,12 @@ class I3::Kommando
     
 end
 
-I3::Kommando.new.run
+driver = I3::Kommando.new
+cmd = ARGV.shift
+
+if ARGV.any?
+  puts driver.send cmd, *ARGV
+else
+  puts driver.send cmd
+end
+
