@@ -288,9 +288,10 @@ bindsym $mod+Shift+apostrophe move container to workspace back_and_forth
 bindsym $mod+Shift+m exec xfce4-appfinder
 
 # Floating assignments
-for_window [title=".*float-terminal.*"] floating enable
-for_window [class="i3k"] floating enable
+#for_window [title=".*float-terminal.*"] floating enable
+#for_window [class="i3k"] floating enable
 for_window [class="Xfce4-notifyd"] floating enable
+#for_window [class="Gkrellm"] floating enable
 
 # Workspace assignments
 assign [class="Audacious"] $ws_media
@@ -309,11 +310,16 @@ bar {
         position top
         output LVDS1
         output VGA1
-	tray_output LVDS1
+        tray_output LVDS1
 
         workspace_buttons yes
+
+        # There are several status_command solutions...
+
         #status_command i3status
-        status_command ruby ~/.i3/i3ba.rb
+        status_command rvm default do ruby ~/.i3/i3ba.rb 2>~/.i3/i3ba.rb.log
+        #status_command bash ~/workspace/i3rb/tmp/i3custom_status.sh
+        #status_command i3blocks
 
         font pango:FontAwesome 8, Terminus 8
         colors {
