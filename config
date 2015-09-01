@@ -356,5 +356,5 @@ client.unfocused          $bcolor $bcolor #FFFF00 #292d2e
 exec --no-startup-id nm-applet
 exec --no-startup-id volumeicon
 exec xrandr --output VGA1 --right-of LVDS1
-exec feh --bg-scale ~/.i3/wallpaper_graffiti
+exec_always ruby ~/.i3/graffiti.rb
 
