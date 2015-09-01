@@ -194,6 +194,7 @@ bindsym $mod+Shift+0 move container to workspace number $ws_10
 
 # switch to workspace selected by dmenu
 bindsym $mod+igrave $i3rb goto_workspace _dmenu_ws_
+#bindsym $mod+igrave exec i3-msg workspace `dmenu`
 
 # move focused container to workspace selected by dmenu
 bindsym $mod+Shift+igrave $i3rb move_to_workspace _dmenu_ws_
@@ -355,5 +356,5 @@ client.unfocused          $bcolor $bcolor #FFFF00 #292d2e
 exec --no-startup-id nm-applet
 exec --no-startup-id volumeicon
 exec xrandr --output VGA1 --right-of LVDS1
-exec feh --bg-scale ~/.i3/wallpworkspace
+exec feh --bg-scale ~/.i3/wallpaper_graffiti
 
