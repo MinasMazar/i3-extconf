@@ -17,9 +17,9 @@ set $term_exec exec i3-sensible-terminal -e
 
 set $ws_1     1: main
 set $ws_2     2: ogame
-set $ws_3    30: www
-set $ws_4    40: audio
-set $ws_5    50: video
+ret $ws_3    30: www
+set $ws_4    40: ♫
+set $ws_5    50: ➤
 set $ws_6    60: work
 set $ws_7    70: chat
 set $ws_8    80: games
@@ -37,6 +37,7 @@ set $ws_fm   100: file
 set $i3rb exec rvm default do i3rb
 
 set $Outpad focus output left, workspace "OUTPAD L", focus output right, workspace "OUTPAD R" 
+set $Scrot exec scrot 'lock_n_scrot.png'; exec xscreensaver-activate
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below. ISO 10646 = Unicode
@@ -91,7 +92,7 @@ bindsym Print                exec xfce4-screenshooter
 set $mode_system System (l) lock, (e) logout, (s) suspend, (h) hibernate, (r) reboot, (Shift+s) shutdown
 mode "$mode_system" {
     bindsym l exec --no-startup-id i3exit lock, mode "default"
-    bindsym e exec --no-startup-id i3exit logout, mode "default"
+    bindsym e quit
     bindsym s exec --no-startup-id i3exit suspend, mode "default"
     bindsym h exec --no-startup-id i3exit hibernate, mode "default"
     bindsym r exec --no-startup-id i3exit reboot, mode "default"
@@ -106,10 +107,10 @@ bindsym $mod+Pause mode "$mode_system"
 # Bind util X11 bins
 bindsym Shift+Pause          $term_exec xev
 
-bindsym $mod+j focus left
-bindsym $mod+k focus down
-bindsym $mod+l focus up
-bindsym $mod+ograve focus right
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
@@ -118,10 +119,10 @@ bindsym $mod+Up focus up
 bindsym $mod+Right focus right
 
 # move focused window
-bindsym $mod+Shift+j move left
-bindsym $mod+Shift+k move down
-bindsym $mod+Shift+l move up
-bindsym $mod+Shift+ograve move right
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Shift+Left move left
@@ -130,7 +131,7 @@ bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
 # split in horizontal orientation
-bindsym $mod+h split h
+bindsym $mod+Shift+v split h
 
 # split in vertical orientation
 bindsym $mod+v split v
@@ -197,7 +198,7 @@ bindsym $mod+igrave $i3rb goto_workspace _dmenu_ws_
 #bindsym $mod+igrave exec i3-msg workspace `dmenu`
 
 # move focused container to workspace selected by dmenu
-bindsym $mod+Shift+igrave $i3rb move_to_workspace _dmenu_ws_
+bindsym $mod+Shift+igrave $i3rb move_and_goto_workspace _dmenu_ws_
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -215,10 +216,10 @@ mode "resize" {
         # Pressing right will grow the window’s width.
         # Pressing up will shrink the window’s height.
         # Pressing down will grow the window’s height.
-        bindsym j resize shrink width 10 px or 10 ppt
-        bindsym k resize grow height 10 px or 10 ppt
-        bindsym l resize shrink height 10 px or 10 ppt
-        bindsym ograve resize grow width 10 px or 10 ppt
+        bindsym h resize shrink width 10 px or 10 ppt
+        bindsym j resize grow height 10 px or 10 ppt
+        bindsym k resize shrink height 10 px or 10 ppt
+        bindsym l resize grow width 10 px or 10 ppt
 
         # same bindings, but for the arrow keys
         bindsym Left resize shrink width 10 px or 10 ppt
@@ -233,19 +234,22 @@ mode "resize" {
 }
 
 mode "LAUNCH" {
-  bindsym f exec thunar, mode "default"
-  bindsym Shift+f workspace number "100: file", exec thunar, mode "default"
-  bindsym o exec opera, mode "default"
+  bindsym f workspace number $ws_10, $term_exec vifm, mode "default"
+  bindsym Shift+f workspace number $ws_10, exec thunar, mode "default"
+  bindsym o exec firefox, mode "default"
   bindsym r exec chromium-browser, mode "default"
   bindsym k exec gkrellm, mode "default"
   bindsym j exec jedit, mode "default"
-  bindsym e exec gvim, mode "default"
+  bindsym e $term_exec vim, mode "default"
+  bindsym Shift+e exec gvim, mode "default"
   bindsym t exec totem, mode "default"
   bindsym v $term_exec gvim, mode "default"
-  bindsym m $term_exec mc, mode "default"
+  bindsym m $term_exec rvm default do tmuxinator start `dmenu -b`, mode "default"
+
   bindsym Shift+m workspace number "100: file", $term_exec mc, mode "default"
   bindsym x $term_exec alsamixer, mode "default"
-  bindsym c exec gvim ~/.i3/config, mode "default"
+  bindsym c workspace $ws_9, exec $term_exec vim ~/.i3/config, mode "default"
+  bindsym Shift+c workspace $ws_9, exec gvim ~/.i3/config, mode "default"
 
   bindsym b $term_exec rvm default do bifrost pry, mode "default"
 
@@ -253,15 +257,14 @@ mode "LAUNCH" {
 
   bindsym Shift+s exec i3-sensible-terminal -e rvm default exec skynet rattack 11 `dmenu -b` --config .skynet-config.yaml, mode "default"
 
-  bindsym y exec exec i3-sensible-terminal -e rvm default exec bifrost ytdl `dmenu -b`, mode "default"
+  bindsym y exec i3-sensible-terminal -e rvm default exec bifrost ytdl `dmenu -b`, mode "default"
 
   bindsym F7  $term_exec rvm default exec cappuccino, $term_exec rvm default exec cappuccino, mode "default"
 
   bindsym F6  exec i3-sensible-terminal -e rvm default exec skynet rattack 9 S126_IT --config .skynet-config.yaml, exec i3-sensible-terminal -e rvm default exec skynet rattack 9 S114_IT --config .skynet-config.yaml, exec i3-sensible-terminal -e rvm default exec skynet rattack 9 S133_IT --config .skynet-config.yaml, mode "default"
 
-  bindsym F2  workspace $ws_www, layout tabbed, exec opera, exec chromium-browser, mode "default"
-  bindsym F3  workspace $ws_media, layout stacking, $term_exec alsamixer, exec audacious,  mode "default"
-  bindsym F4  workspace $ws_fm, $term_exec mc, exec i3-sensible-terminal, $term_exec mc, mode "default"
+  bindsym F3  exec opera, exec chromium-browser, mode "default"
+  bindsym F4  workspace $ws_4, layout splitv, $term_exec alsamixer, $term_exec cmus ,  mode "default"
 
   bindsym F11 $term_exec rvm default do skynet rattack 11 S126_IT --config ~/.skynet-config.yaml, $term_exec rvm default do skynet rattack 11 S133_IT --config ~/.skynet-config.yaml
 
@@ -296,6 +299,7 @@ for_window [class="Xfce4-notifyd"] floating enable
 
 # Workspace assignments
 assign [class="Audacious"] $ws_media
+assign [class=".*cmus.*"] $ws_media
 assign [class="Gimp"] gimp
 assign [class=".*Opera.*"] $ws_ogame
 assign [class=".*Chromium-browser.*"] $ws_www
@@ -326,11 +330,11 @@ bar {
         colors {
           background $bcolor
           statusline #ffffff
-          separator #F6336F
+          separator #111111
   
-          focused_workspace  #4c7899 #285577 $fcolor
-          active_workspace   #333333 #5f676a #FFFF00
-          inactive_workspace #333333 #222222 #FFFF00
+          focused_workspace  $bcolor $bcolor $fcolor
+          active_workspace   $bcolor $bcolor #FFFFFF
+          inactive_workspace $bcolor $bcolor #FFFFFF
           urgent_workspace   #2f343a #900000 #ffffff
         }
 
@@ -347,14 +351,14 @@ bar {
 # SETTING COLORS (from http://i3wm.org/docs/userguide.html#_the_tree_consists_of_containers)
 # class                 border  backgr. text    indicator
 
-client.focused            $fcolor $fcolor #ffffff #2e9ef4
-# client.focused_inactive #99BBBB #99BBBB #ffffff #484e50
-client.unfocused          $bcolor $bcolor #FFFF00 #292d2e
-# client.urgent           #2f343a #900000 #ffffff #900000
+client.focused            $fcolor $fcolor $bcolor $bcolor
+client.focused_inactive   $bcolor $bcolor $fcolor $bcolor
+client.unfocused          $bcolor $bcolor $fcolor $bcolor
+client.urgent             #FF0000 #FF0000 #FFFF00 $bcolor
 # client.placeholder      #000000 #0c0c0c #ffffff #000000
 
 exec --no-startup-id nm-applet
-exec --no-startup-id volumeicon
+exec --no-startup-id pasystray
 exec xrandr --output VGA1 --right-of LVDS1
-exec_always ruby ~/.i3/graffiti.rb
+exec_always cd .i3; rvm default exec ruby ~/.i3/graffiti.rb
 
