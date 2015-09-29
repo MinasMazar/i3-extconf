@@ -17,7 +17,7 @@ set $term_exec exec i3-sensible-terminal -e
 
 set $ws_1     1: main
 set $ws_2     2: ogame
-ret $ws_3    30: www
+set $ws_3    30: www
 set $ws_4    40: ♫
 set $ws_5    50: ➤
 set $ws_6    60: work
@@ -36,8 +36,10 @@ set $ws_fm   100: file
 
 set $i3rb exec rvm default do i3rb
 
+#set $Lock exec xscreensaver-command --activate
+set $Lock exec i3lock -c "#DD6633" -e
 set $Outpad focus output left, workspace "OUTPAD L", focus output right, workspace "OUTPAD R" 
-set $Scrot exec scrot 'lock_n_scrot.png'; exec xscreensaver-activate
+set $Scrot exec scrot 'lock_n_scrot.png'; $Lock
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below. ISO 10646 = Unicode
@@ -56,7 +58,7 @@ focus_follows_mouse yes
 
 # start a terminal
 bindsym $mod+Return exec i3-sensible-terminal
-bindsym $mod+Shift+Return exec i3-sensible-terminal, exec i3-sensible-terminal 
+bindsym $mod+Shift+Return exec i3-sensible-terminal -e pry
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -82,9 +84,9 @@ bindsym Shift+XF86AudioRaiseVolume  exec amixer -q set Master toggle
 # Bind lockers & shooters
 exec xscreensaver -no-splash
 
-bindsym $mod+ugrave          $Outpad, exec xscreensaver-command -activate
+bindsym $mod+ugrave          $Outpad, $Lock
 bindsym $mod+backslash       $Outpad
-bindsym $mod+Shift+ugrave    $Outpad, exec xscreensaver-command -lock
+bindsym $mod+Shift+ugrave    $Outpad, $Lock
 bindsym $mod+Shift+agrave    $term_exec rvm default exec clockwork ~/.i3/xscreensaver_deactivator.rb
 
 bindsym Print                exec xfce4-screenshooter
