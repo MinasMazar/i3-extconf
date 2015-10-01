@@ -40,10 +40,10 @@ set $down j
 set $left h
 set $right l
 
-set $msg 'MESSAGGIO'
-
 set $term i3-sensible-terminal
 set $term_exec exec i3-sensible-terminal -e
+set $Lock exec i3lock
+set $TouchScreensaver exec i3-sensible-terminal -e rvm default do clockwork ~/.i3/xscreensaver_deactivator.rb
 
 # use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -75,9 +75,6 @@ bindsym $mod+Down focus down
 bindsym $mod+Up focus up
 bindsym $mod+Right focus right
 
-bindsym $mod+Tab focus right
-bindsym $mod+Shift+Tab focus left
-
 # move focused window
 bindsym $mod+Shift+$left move left
 bindsym $mod+Shift+$down move down
@@ -97,7 +94,7 @@ bindsym $mod+Shift+v split h
 bindsym $mod+v split v
 
 # enter fullscreen mode for the focused container
-bindsym $mod+f fullscreen
+bindsym $mod+Tab fullscreen
 
 # change container layout (stacked, tabbed, toggle split)
 bindsym $mod+s layout stacking
@@ -151,6 +148,9 @@ bindsym $mod+comma  workspace prev
 bindsym $mod+period workspace next
 bindsym $mod+Shift+comma  move container to workspace prev, workspace
 bindsym $mod+Shift+period move container to workspace next, workspace next
+bindsym $mod+apostrophe workspace back_and_forth
+bindsym $mod+igrave exec i3-msg workspace `dmenu `
+bindsym $mod+Shift+igrave exec i3-msg move container to workspace `dmenu `
 
 # reload the configuration file
 bindsym $mod+shift+c reload
@@ -167,6 +167,9 @@ bindsym XF86AudioLowerVolume        exec amixer -q set Master 2%- unmute
 bindsym XF86AudioRaiseVolume        exec amixer -q set Master 2%+ unmute
 bindsym Shift+XF86AudioLowerVolume  exec amixer -q set Master mute
 bindsym Print                       exec scrot
+
+bindsym $mod+Shift+ugrave $Lock
+bindsym $mod+Shift+agrave $TouchScreensaver
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -198,7 +201,7 @@ bindsym $mod+r mode "resize"
 mode "SYSTEM" {
   
   bindsym F12 exec xrandr --auto, exec  sleep 1 && xrandr --output VGA1 --right-of LVDS1, mode "default"
-  bindsym c gvim +NERDTree -p ~/.i3/config
+  bindsym c $term_exec vim ~/.i3/config, mode "default"
 
   bindsym Escape mode "default"
   bindsym $mod+i mode "default"
@@ -209,7 +212,8 @@ mode "LAUNCHER" {
   bindsym s $term_exec cmus
   bindsym a $term_exec alsamixer
   bindsym e $term_exec vim
-  bindsym Shift+e gvim
+  bindsym Shift+e exec gvim
+  bindsym x $term_exec tmuxinator start `dmenu -p \"TMUX-SESSION:\" `
 
   bindsym Escape mode "default"
   bindsym $mod+m mode "default"
@@ -218,9 +222,11 @@ mode "LAUNCHER" {
 bindsym $mod+i mode "SYSTEM"
 bindsym $mod+m mode "LAUNCHER"
 
-assign [class="Firefox"] ⚝
-assign [class="Chromium.*"] 🗺
-assign [class="Wesnoth"] ♖
+assign [class="Firefox"] 2:⚝
+assign [class="Chromium.*"] 3:🗺
+assign [class="Wesnoth"] 8:♖
+assign [class="Xfce4-terminal" title=".*cmus.*" ] 3:♫
+assign [class="Xfce4-terminal" title=".*alsamixer.*" ] 3:♫
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
@@ -229,14 +235,15 @@ bar {
   tray_output LVDS1
   status_command while [ true ]; do date; sleep 1; done
   colors {
-	background #000000
-	statusline #ffffff
-	separator #111111
+    background #000000
+    statusline #ffffff
+    separator #111111
 
-	focused_workspace  $fcolor #000000 $fcolor
-	active_workspace   $fcolor #000000 $fcolor
-	urgent_workspace   #FF0000 #000000 $fcolor
-	inactive_workspace #111111 #000000 $fcolor
+    focused_workspace  $fcolor #000000 #FFFFFF
+    active_workspace   $fcolor #000000 #FFFFFF
+    urgent_workspace   #FF0000 #000000 #FFFFFF
+    inactive_workspace #111111 #000000 #FFFFFF
+    #binding_mode       #FFFFFF $fcolor #ffffff
   }
 }
 
@@ -248,8 +255,8 @@ bar {
   status_command rvm default do ruby ~/.i3/i3ba.rb 2>~/.i3/i3ba.rb.log
 }
 
-exec --no-startup-id i3-sensible-terminal
-exec --no-startup-id i3-sensible-terminal -geometry 60x10 -e cmus
+exec --no-startup-id i3-sensible-terminal -e alsamixer
+exec --no-startup-id i3-sensible-terminal -e cmus
 exec --no-startup-id nm-applet
 exec --no-startup-id pasystray
 exec xrandr --output VGA1 --right-of LVDS1
