@@ -1,7 +1,3 @@
-
-#exit(-1) if ARGV.empty?
-
-require 'pry'
 require 'mechanize'
 
 class HTTPClient
@@ -29,16 +25,20 @@ def apod_image
   if result["media_type"] == "image"
     img = HTTPClient.get_page result["url"]
     File.write "wallpaper_graffiti", img
+    #File.write "~/Immagini/wallpaper_apod#{date}.png", img
   else
     raise "Could not download media type: #{result["media_type"]}"
   end
 end
 
-case ARGV.first
-when "rand"
-  rand_image
-when "apod"
-  apod_image
+begin
+  case ARGV.first
+  when "rand"
+    rand_image
+  when "apod"
+    apod_image
+  end
+rescue
+ensure
+  system "feh --bg-scale ~/.i3/wallpaper_graffiti"
 end
-
-system "feh --bg-scale ~/.i3/wallpaper_graffiti"

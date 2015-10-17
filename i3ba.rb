@@ -1,24 +1,33 @@
-#!/bin/env ruby
+#!/usr/bin/env ruby
 require 'i3rb'
 
 include I3::API
 include I3::Bar::Widgets
 
-STATUS_BAR = I3::Bar::Widget.new 'fuzzyw', 0 do |w|
-  w.color = "#00FFFF"
-  "STATUS BAR: "
+host = I3::Bar::Widgets::HOSTNAME
+host.color = "#00FFFF"
+host.add_event_callback do |w|
+  system "xterm", "-e", "top"
 end
 
-I3::Bar.get_instance do |b|
+cmus = I3::Bar::Widgets::CMUS
+cmus.add_event_callback do |w,e|
+  if e["button"]== 1
+    system "cmus-remote", "--pause"
+  end
+end
+
+bar = I3::Bar.get_instance do |b|
 
   include I3::Bar::Widgets
 
-  b.add_widgets [ STATUS_BAR, HOSTNAME, WIFI, TEMPERATURE ]
+  b.add_widgets [ host, CMUS, WIFI, TEMPERATURE, BATTERY, CALENDAR ]
 
-  b.add_event_callback do |e|
-    $stderr.puts e.inspect
+  b.add_event_callback do |w,e|
+    $stderr.puts e.inspect 
   end
 
   b.start_events_capturing
   b.run 1
 end
+
