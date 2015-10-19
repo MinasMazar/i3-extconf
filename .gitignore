@@ -1,4 +1,5 @@
 
-# Ignore Vim swap files
+# Ignore Vim swap files and log files.
 *.swp
+*.log
 
