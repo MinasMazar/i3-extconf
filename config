@@ -259,6 +259,8 @@ mode "LAUNCHER" {
   bindsym x $term_exec tmuxinator start `dmenu -p \"TMUX-SESSION:\" `, mode "default"
   bindsym s $term_exec tmuxinator start skynet, mode "default"
   bindsym i $term_exec irssi, mode "default"
+  bindsym w exec dwb `xclip -o`, mode "default"
+  bindsym y $term_exec youtube-dl `xclip -o`, mode "default"
 
   bindsym 1 exec firefox, mode "default"
   bindsym 2 exec chromium-browser, mode "default"
