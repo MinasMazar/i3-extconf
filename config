@@ -164,8 +164,8 @@ bindsym $mod+apostrophe workspace back_and_forth
 bindsym $mod+igrave exec i3-msg workspace `dmenu `
 bindsym $mod+Shift+igrave exec i3-msg move container to workspace `dmenu `
 
-bindsym $mod+backslash exec i3-input -P "GO TO WORKSPACE: " -F "workspace %s" -l 2 
-bindsym $mod+Shift+backslash exec i3-input -P "MOVE TO WORKSPACE: " -F "move container to workspace %s" -l 2
+bindsym $mod+backslash exec i3-input -P "GO TO WORKSPACE: " -F "workspace number %s" -l 2 
+bindsym $mod+Shift+backslash exec i3-input -P "MOVE TO WORKSPACE: " -F "move container to workspace number %s" -l 2
 
 # reload the configuration file
 bindsym $mod+shift+c reload
@@ -283,27 +283,28 @@ bar {
   position top
   font pango:dejavu sans book 8
   tray_output LVDS1
-  status_command while [ true ]; do date; sleep 1; done
-  colors {
-    background #000000
-    statusline #ffffff
-    separator #111111
-
-    focused_workspace  $fcolor #000000 #FFFFFF
-    active_workspace   $fcolor #000000 #FFFFFF
-    urgent_workspace   #FF0000 $fcolor #FFFFFF
-    inactive_workspace #111111 #000000 #FFFFFF
-    #binding_mode       #FFFFFF $fcolor #ffffff
-  }
+  strip_workspace_numbers yes
+  
+#  colors {
+#    background #000000
+#    statusline #ffffff
+#    separator #111111
+#
+#    focused_workspace  $fcolor #000000 #FFFFFF
+#    active_workspace   $fcolor #000000 #FFFFFF
+#    urgent_workspace   #FF0000 $fcolor #FFFFFF
+#    inactive_workspace #111111 #000000 #FFFFFF
+#    #binding_mode       #FFFFFF $fcolor #ffffff
+#  }
 }
 
 bar {
   position bottom
-  font pango:dejavu sans book 8
   workspace_buttons no
   binding_mode_indicator no
-  tray_output none
-  status_command ~/.i3/i3ba.rb
+  
+  font pango:dejavu sans book 8
+  status_command i3barb 2>~/.i3/i3ba.rb.log
 }
 
 ###
