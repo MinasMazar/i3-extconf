@@ -17,9 +17,9 @@ def rand_image
   system "ln -fs #{rand_wallpaper} wallpaper_graffiti"
 end
 
-def apod_image
+def apod_image(date = Date.today)
   dates = ( (Date.today - 365) .. Date.today ).to_a
-  date = dates.sample.strftime "%Y-%m-%d"
+  date = date || dates.sample.strftime("%Y-%m-%d")
   url = "https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&date=#{date}&hd=false"
   result = JSON.parse HTTPClient.get_page url
   if result["media_type"] == "image"
