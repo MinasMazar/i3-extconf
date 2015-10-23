@@ -18,13 +18,14 @@ def rand_image
 end
 
 def apod_image(date = Date.today)
-  dates = ( (Date.today - 365) .. Date.today ).to_a
-  date = date || dates.sample.strftime("%Y-%m-%d")
+  date = date.strftime "%Y-%m-%d"
   url = "https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&date=#{date}&hd=false"
   result = JSON.parse HTTPClient.get_page url
   if result["media_type"] == "image"
     img = HTTPClient.get_page result["url"]
+    print "Downloading #{result['url']}.."
     File.write "wallpaper_graffiti", img
+    puts "..done."
     #File.write "~/Immagini/wallpaper_apod#{date}.png", img
   else
     raise "Could not download media type: #{result["media_type"]}"
@@ -37,8 +38,9 @@ begin
     rand_image
   when "apod"
     apod_image
+  else
+    exit(-1)
   end
-rescue
-ensure
   system "feh --bg-scale ~/.i3/wallpaper_graffiti"
 end
+
